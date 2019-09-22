@@ -60,6 +60,12 @@ var generateRandomId = function (arr) {
   return index;
 };
 
+var similarListElement = document.querySelector('.big-picture__social');
+
+var similarUserPhotos = document.querySelector('#picture')
+    .content
+    .querySelector('.picture');
+
 for (var i = 0; i < amountPhotos; i++) {
   var PHOTO_COMMENTS = [];
   var createComments = function () {
@@ -83,12 +89,6 @@ for (var i = 0; i < amountPhotos; i++) {
   };
 };
 
-var similarListElement = document.querySelector('.big-picture__social');
-
-var similarUserPhotos = document.querySelector('#picture')
-    .content
-    .querySelector('.picture');
-
 var renderUserPhotos = function (descAndPhotos) {
   var userPhotosElement = similarUserPhotos.cloneNode(true);
 
@@ -104,4 +104,5 @@ for (var k = 0; k < amountPhotos; k++) {
   fragment.appendChild(renderUserPhotos(descAndPhotos[k]));
 }
 similarListElement.appendChild(fragment);
+
 document.querySelector('.big-picture').classList.remove('hidden');
