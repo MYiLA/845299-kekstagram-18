@@ -82,7 +82,7 @@ for (var i = 0; i < amountPhotos; i++) {
   };
 
   descAndPhotos[i] = {
-    url: ('photos' + (i + 1) + '.jpg'),
+    url: ('photos/' + (i + 1) + '.jpg'),
     description: DESC_PHOTOS[generateRandomId(DESC_PHOTOS)],
     likes: getRandomIntInclusive(15, 200),
     comments: (PHOTO_COMMENTS.length + 1),
