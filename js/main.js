@@ -1,3 +1,4 @@
+'use strict';
 var amountPhotos = 25;
 var descAndPhotos = [];
 var COMMENTS = [
@@ -46,15 +47,13 @@ var DESC_PHOTOS = [
   'Что это было?',
   'Вторник – день вкусняшек',
   'Пытался сделать себяшку...',
-]
-
-var userNames = [];
+];
 
 var getRandomIntInclusive = function (min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+};
 var generateRandomId = function (arr) {
   var index = Math.round(Math.random() * (arr.length - 1));
   return index;
@@ -79,22 +78,21 @@ for (var i = 0; i < amountPhotos; i++) {
   };
   for (var j = 0; j < getRandomIntInclusive(1, 5); j++) {
     PHOTO_COMMENTS[j] = createComments();
-  };
-
+  }
   descAndPhotos[i] = {
     url: ('photos/' + (i + 1) + '.jpg'),
     description: DESC_PHOTOS[generateRandomId(DESC_PHOTOS)],
     likes: getRandomIntInclusive(15, 200),
     comments: (PHOTO_COMMENTS.length + 1),
   };
-};
+}
 
-var renderUserPhotos = function (descAndPhotos) {
+var renderUserPhotos = function (descAndPhoto) {
   var userPhotosElement = similarUserPhotos.cloneNode(true);
 
-  userPhotosElement.querySelector('.picture__img').src = descAndPhotos.url;
-  userPhotosElement.querySelector('.picture__likes').textContent = descAndPhotos.likes;
-  userPhotosElement.querySelector('.picture__comments').textContent = descAndPhotos.comments;
+  userPhotosElement.querySelector('.picture__img').src = descAndPhoto.url;
+  userPhotosElement.querySelector('.picture__likes').textContent = descAndPhoto.likes;
+  userPhotosElement.querySelector('.picture__comments').textContent = descAndPhoto.comments;
 
   return userPhotosElement;
 };
