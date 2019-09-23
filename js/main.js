@@ -49,42 +49,51 @@ var DESC_PHOTOS = [
   'Пытался сделать себяшку...',
 ];
 
+var similarUserPhotos = document.querySelector('#picture')
+    .content
+    .querySelector('.picture');
+
+var blockPictures = document.querySelector('.pictures');
+
 var getRandomIntInclusive = function (min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
+
 var generateRandomId = function (arr) {
   var index = Math.round(Math.random() * (arr.length - 1));
   return index;
 };
 
-var similarListElement = document.querySelector('.big-picture__social');
-
-var similarUserPhotos = document.querySelector('#picture')
-    .content
-    .querySelector('.picture');
-
-for (var i = 0; i < amountPhotos; i++) {
-  var PHOTO_COMMENTS = [];
-  var createComments = function () {
-    var nameId = generateRandomId(NAMES);
-    var surnameId = generateRandomId(SURNAMES);
-    return {
-      avatar: ('"img/avatar-' + getRandomIntInclusive(1, 6) + '.svg"'),
-      message: COMMENTS[generateRandomId(COMMENTS)],
-      name: NAMES[nameId] + ' ' + SURNAMES[surnameId],
-    };
+var createComment = function () {
+  var nameId = generateRandomId(NAMES);
+  var surnameId = generateRandomId(SURNAMES);
+  return {
+    avatar: ('"img/avatar-' + getRandomIntInclusive(1, 6) + '.svg"'),
+    message: COMMENTS[generateRandomId(COMMENTS)],
+    name: NAMES[nameId] + ' ' + SURNAMES[surnameId],
   };
+};
+
+var generatePhotoObject = function (index) {
+
+  var photoComments = [];
+
   for (var j = 0; j < getRandomIntInclusive(1, 5); j++) {
-    PHOTO_COMMENTS[j] = createComments();
+    photoComments.push(createComment());
   }
-  descAndPhotos[i] = {
-    url: ('photos/' + (i + 1) + '.jpg'),
+
+  return {
+    url: ('photos/' + (index + 1) + '.jpg'),
     description: DESC_PHOTOS[generateRandomId(DESC_PHOTOS)],
     likes: getRandomIntInclusive(15, 200),
-    comments: (PHOTO_COMMENTS.length + 1),
+    comments: (photoComments.length + 1),
   };
+};
+
+for (var i = 0; i < amountPhotos; i++) {
+  descAndPhotos.push(generatePhotoObject(i));
 }
 
 var renderUserPhotos = function (descAndPhoto) {
@@ -96,11 +105,9 @@ var renderUserPhotos = function (descAndPhoto) {
 
   return userPhotosElement;
 };
-
 var fragment = document.createDocumentFragment();
 for (var k = 0; k < amountPhotos; k++) {
   fragment.appendChild(renderUserPhotos(descAndPhotos[k]));
 }
-similarListElement.appendChild(fragment);
 
-document.querySelector('.big-picture').classList.remove('hidden');
+blockPictures.appendChild(fragment);
