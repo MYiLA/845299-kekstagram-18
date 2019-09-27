@@ -2,7 +2,7 @@
 var amountPhotos = 25;
 var maxQuantityComments = 5;
 var minQuantityComments = 1;
-var descAndPhotos = [];
+var photoObjects = [];
 var COMMENTS = [
   'Всё отлично!',
   'В целом всё неплохо. Но не всё.',
@@ -14,24 +14,20 @@ var COMMENTS = [
 
 var NAMES = [
   'Иван',
-  'Хуан Себастьян',
+  'Золтан',
   'Мария',
-  'Кристоф',
-  'Виктор',
+  'Крис',
+  'Стас',
   'Юлия',
-  'Люпита',
-  'Вашингтон'
-];
-
-var SURNAMES = [
-  'да Марья',
+  'Серёга',
+  'Витёк',
+  'Марья',
   'Верон',
-  'Мирабелла',
+  'Белла',
   'Вальц',
-  'Онопко',
-  'Топольницкая',
-  'Нионго',
-  'Ирвинг'
+  'Оно',
+  'Борис',
+  'Геракл'
 ];
 
 var DESC_PHOTOS = [
@@ -57,8 +53,7 @@ var similarUserPhotos = document.querySelector('#picture')
 
 var blockPictures = document.querySelector('.pictures');
 var blockBigPicture = document.querySelector('.big-picture');
-var blockMain = document.querySelector('main');
-var blockSocialComments = document.querySelector('.social__comments');
+var singleComment = document.querySelector('.social__comment');
 
 var getRandomIntInclusive = function (min, max) {
   min = Math.ceil(min);
@@ -73,11 +68,10 @@ var generateRandomId = function (arr) {
 
 var createComment = function () {
   var nameId = generateRandomId(NAMES);
-  var surnameId = generateRandomId(SURNAMES);
   return {
     avatar: ('"img/avatar-' + getRandomIntInclusive(1, 6) + '.svg"'),
     message: COMMENTS[generateRandomId(COMMENTS)],
-    name: NAMES[nameId] + ' ' + SURNAMES[surnameId],
+    name: NAMES[nameId],
   };
 };
 
@@ -92,20 +86,14 @@ var generatePhotoObject = function (index) {
     url: ('photos/' + (index + 1) + '.jpg'),
     description: DESC_PHOTOS[generateRandomId(DESC_PHOTOS)],
     likes: getRandomIntInclusive(15, 200),
-    quantityComments: (photoComments.length + 1),
-
-    // здесь нужно исправить счетчик видимых фотографий, пока не понимаю, как корректно их вставить в HTML
-    visibleComments: ('2 из '),
+    quantityComments: photoComments.length,
     comments: photoComments,
   };
 };
 
 for (var i = 0; i < amountPhotos; i++) {
-  descAndPhotos.push(generatePhotoObject(i));
+  photoObjects.push(generatePhotoObject(i));
 }
-
-// все моки вроде верно генерируются
-console.log(descAndPhotos);
 
 var renderUserPhotos = function (descAndPhoto) {
   var userPhotosElement = similarUserPhotos.cloneNode(true);
@@ -117,46 +105,36 @@ var renderUserPhotos = function (descAndPhoto) {
   return userPhotosElement;
 };
 
-// идея решения задачи с отрисовкой комментариев
-// console.log(descAndPhotos[0].comments[0-5].name);
-// console.log(descAndPhotos);
-
 var fragment = document.createDocumentFragment();
 for (var k = 0; k < amountPhotos; k++) {
-  fragment.appendChild(renderUserPhotos(descAndPhotos[k]));
+  fragment.appendChild(renderUserPhotos(photoObjects[k]));
 }
 
 blockPictures.appendChild(fragment);
 
-blockBigPicture.classList.remove('hidden');
-
-// Здесь не получается в параметр функции задать "comment", так как он является объектом descAndPhotos[0]
-var renderBigPictures = function (comment) {
-  var bigPicturesElement = blockBigPicture.cloneNode(true);
-  var socialCommentsElement = blockSocialComments.cloneNode(true)
-
-  bigPicturesElement.querySelector('.big-picture__img img').src = descAndPhotos[0].url;
-  bigPicturesElement.querySelector('.likes-count').textContent = descAndPhotos[0].likes;
-  // Здесь я пыталась внести правки в счетчик видимых комментариев с помощью insertAdjacentHTML, но это не работает
-  // bigPicturesElement.querySelector('.social__comment-count').insertAdjacentHTML('afterBegin', descAndPhoto.visibleComments);
-  bigPicturesElement.querySelector('.comments-count').textContent = descAndPhotos[0].quantityComments;
-  // Здесь я пыталась вставить комментарии с помощью innerHTML, но это не работает
-  // bigPicturesElement.querySelector('.social__comments').innerHTML = renderComments();
-  socialCommentsElement.querySelector('.social__picture').src = descAndPhotos[0].comment.avatar;
-  socialCommentsElement.querySelector('.social__picture').alt = descAndPhotos[0].comment.name;
-  socialCommentsElement.querySelector('.social__text').textContent = descAndPhotos[0].comment.message;
-  bigPicturesElement.querySelector('.social__caption').textContent = descAndPhotos[0].description;
-  return bigPicturesElement;
+var renderComments = function (arr) {
+  var fragmentComment = document.createDocumentFragment();
+  for (var l = 0; l < arr.length; l++) {
+    var newComment = singleComment.cloneNode(true);
+    newComment.querySelector('.social__text').textContent = arr[l].message;
+    newComment.querySelector('.social__picture').src = arr[l].avatar;
+    newComment.querySelector('.social__picture').alt = arr[l].name;
+    fragmentComment.appendChild(newComment);
+  }
+  return fragmentComment;
 };
 
-// У меня слишком много счетчиков(i j k имен уже не хватает). Возможно ли сократить их количество? я как понимаю со способом их объявления "var" каждому счетчику нужно обязательно давать уникальное имя.
+var renderBigPictures = function (obj) {
+  blockBigPicture.classList.remove('hidden');
+  blockBigPicture.querySelector('.big-picture__img img').src = obj.url;
+  blockBigPicture.querySelector('.likes-count').textContent = obj.likes;
+  blockBigPicture.querySelector('.comments-count').textContent = obj.quantityComments;
+  blockBigPicture.querySelector('.social__caption').textContent = obj.description;
+  var temp = renderComments(obj.comments);
+  blockBigPicture.querySelector('.social__comments').innerHTML = '';
+  blockBigPicture.querySelector('.social__comments').appendChild(temp);
+  blockBigPicture.querySelector('.social__comment-count').classList.add('hidden');
+  blockBigPicture.querySelector('.comments-loader').classList.add('hidden');
+};
 
-// здесь не работает параметр "comments[l]", соответственно потому, что я не могу его передать в функцию "renderBigPictures"
-for (var l = 0; l < maxQuantityComments; l++) {
-  fragment.appendChild(renderBigPictures(comments[l]));
-}
-
-fragment.appendChild(renderBigPictures());
-
-
-blockMain.appendChild(fragment);
+renderBigPictures(photoObjects[0]);
