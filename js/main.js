@@ -69,7 +69,7 @@ var generateRandomId = function (arr) {
 var createComment = function () {
   var nameId = generateRandomId(NAMES);
   return {
-    avatar: ('"img/avatar-' + getRandomIntInclusive(1, 6) + '.svg"'),
+    avatar: ('img/avatar-' + getRandomIntInclusive(1, 6) + '.svg'),
     message: COMMENTS[generateRandomId(COMMENTS)],
     name: NAMES[nameId],
   };
