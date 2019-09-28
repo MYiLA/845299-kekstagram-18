@@ -1,6 +1,8 @@
 'use strict';
 var amountPhotos = 25;
-var descAndPhotos = [];
+var maxQuantityComments = 5;
+var minQuantityComments = 1;
+var photoObjects = [];
 var COMMENTS = [
   'Всё отлично!',
   'В целом всё неплохо. Но не всё.',
@@ -12,24 +14,20 @@ var COMMENTS = [
 
 var NAMES = [
   'Иван',
-  'Хуан Себастьян',
+  'Золтан',
   'Мария',
-  'Кристоф',
-  'Виктор',
+  'Крис',
+  'Стас',
   'Юлия',
-  'Люпита',
-  'Вашингтон'
-];
-
-var SURNAMES = [
-  'да Марья',
+  'Серёга',
+  'Витёк',
+  'Марья',
   'Верон',
-  'Мирабелла',
+  'Белла',
   'Вальц',
-  'Онопко',
-  'Топольницкая',
-  'Нионго',
-  'Ирвинг'
+  'Оно',
+  'Борис',
+  'Геракл'
 ];
 
 var DESC_PHOTOS = [
@@ -54,6 +52,8 @@ var similarUserPhotos = document.querySelector('#picture')
     .querySelector('.picture');
 
 var blockPictures = document.querySelector('.pictures');
+var blockBigPicture = document.querySelector('.big-picture');
+var singleComment = document.querySelector('.social__comment');
 
 var getRandomIntInclusive = function (min, max) {
   min = Math.ceil(min);
@@ -68,19 +68,17 @@ var generateRandomId = function (arr) {
 
 var createComment = function () {
   var nameId = generateRandomId(NAMES);
-  var surnameId = generateRandomId(SURNAMES);
   return {
-    avatar: ('"img/avatar-' + getRandomIntInclusive(1, 6) + '.svg"'),
+    avatar: ('img/avatar-' + getRandomIntInclusive(1, 6) + '.svg'),
     message: COMMENTS[generateRandomId(COMMENTS)],
-    name: NAMES[nameId] + ' ' + SURNAMES[surnameId],
+    name: NAMES[nameId],
   };
 };
 
 var generatePhotoObject = function (index) {
 
   var photoComments = [];
-
-  for (var j = 0; j < getRandomIntInclusive(1, 5); j++) {
+  for (var j = 0; j < getRandomIntInclusive(minQuantityComments, maxQuantityComments); j++) {
     photoComments.push(createComment());
   }
 
@@ -88,12 +86,13 @@ var generatePhotoObject = function (index) {
     url: ('photos/' + (index + 1) + '.jpg'),
     description: DESC_PHOTOS[generateRandomId(DESC_PHOTOS)],
     likes: getRandomIntInclusive(15, 200),
-    comments: (photoComments.length + 1),
+    quantityComments: photoComments.length,
+    comments: photoComments,
   };
 };
 
 for (var i = 0; i < amountPhotos; i++) {
-  descAndPhotos.push(generatePhotoObject(i));
+  photoObjects.push(generatePhotoObject(i));
 }
 
 var renderUserPhotos = function (descAndPhoto) {
@@ -101,13 +100,41 @@ var renderUserPhotos = function (descAndPhoto) {
 
   userPhotosElement.querySelector('.picture__img').src = descAndPhoto.url;
   userPhotosElement.querySelector('.picture__likes').textContent = descAndPhoto.likes;
-  userPhotosElement.querySelector('.picture__comments').textContent = descAndPhoto.comments;
+  userPhotosElement.querySelector('.picture__comments').textContent = descAndPhoto.quantityComments;
 
   return userPhotosElement;
 };
+
 var fragment = document.createDocumentFragment();
 for (var k = 0; k < amountPhotos; k++) {
-  fragment.appendChild(renderUserPhotos(descAndPhotos[k]));
+  fragment.appendChild(renderUserPhotos(photoObjects[k]));
 }
 
 blockPictures.appendChild(fragment);
+
+var renderComments = function (arr) {
+  var fragmentComment = document.createDocumentFragment();
+  for (var l = 0; l < arr.length; l++) {
+    var newComment = singleComment.cloneNode(true);
+    newComment.querySelector('.social__text').textContent = arr[l].message;
+    newComment.querySelector('.social__picture').src = arr[l].avatar;
+    newComment.querySelector('.social__picture').alt = arr[l].name;
+    fragmentComment.appendChild(newComment);
+  }
+  return fragmentComment;
+};
+
+var renderBigPictures = function (obj) {
+  blockBigPicture.classList.remove('hidden');
+  blockBigPicture.querySelector('.big-picture__img img').src = obj.url;
+  blockBigPicture.querySelector('.likes-count').textContent = obj.likes;
+  blockBigPicture.querySelector('.comments-count').textContent = obj.quantityComments;
+  blockBigPicture.querySelector('.social__caption').textContent = obj.description;
+  var temp = renderComments(obj.comments);
+  blockBigPicture.querySelector('.social__comments').innerHTML = '';
+  blockBigPicture.querySelector('.social__comments').appendChild(temp);
+  blockBigPicture.querySelector('.social__comment-count').classList.add('hidden');
+  blockBigPicture.querySelector('.comments-loader').classList.add('hidden');
+};
+
+renderBigPictures(photoObjects[0]);
