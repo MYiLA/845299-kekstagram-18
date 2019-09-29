@@ -2,6 +2,10 @@
 var amountPhotos = 25;
 var maxQuantityComments = 5;
 var minQuantityComments = 1;
+var maxQuantityLikes = 200;
+var minQuantityLikes = 15;
+var maxIdAvatars = 6;
+var minIdAvatars = 1;
 var photoObjects = [];
 var COMMENTS = [
   'Всё отлично!',
@@ -69,7 +73,7 @@ var generateRandomId = function (arr) {
 var createComment = function () {
   var nameId = generateRandomId(NAMES);
   return {
-    avatar: ('img/avatar-' + getRandomIntInclusive(1, 6) + '.svg'),
+    avatar: ('img/avatar-' + getRandomIntInclusive(minIdAvatars, maxIdAvatars) + '.svg'),
     message: COMMENTS[generateRandomId(COMMENTS)],
     name: NAMES[nameId],
   };
@@ -85,7 +89,7 @@ var generatePhotoObject = function (index) {
   return {
     url: ('photos/' + (index + 1) + '.jpg'),
     description: DESC_PHOTOS[generateRandomId(DESC_PHOTOS)],
-    likes: getRandomIntInclusive(15, 200),
+    likes: getRandomIntInclusive(minQuantityLikes, maxQuantityLikes),
     quantityComments: photoComments.length,
     comments: photoComments,
   };
@@ -130,9 +134,8 @@ var renderBigPictures = function (obj) {
   blockBigPicture.querySelector('.likes-count').textContent = obj.likes;
   blockBigPicture.querySelector('.comments-count').textContent = obj.quantityComments;
   blockBigPicture.querySelector('.social__caption').textContent = obj.description;
-  var temp = renderComments(obj.comments);
   blockBigPicture.querySelector('.social__comments').innerHTML = '';
-  blockBigPicture.querySelector('.social__comments').appendChild(temp);
+  blockBigPicture.querySelector('.social__comments').appendChild(renderComments(obj.comments));
   blockBigPicture.querySelector('.social__comment-count').classList.add('hidden');
   blockBigPicture.querySelector('.comments-loader').classList.add('hidden');
 };
