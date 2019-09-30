@@ -52,8 +52,8 @@ var DESC_PHOTOS = [
 ];
 
 var similarUserPhotos = document.querySelector('#picture')
-    .content
-    .querySelector('.picture');
+  .content
+  .querySelector('.picture');
 
 var blockPictures = document.querySelector('.pictures');
 var blockBigPicture = document.querySelector('.big-picture');
@@ -140,4 +140,131 @@ var renderBigPictures = function (obj) {
   blockBigPicture.querySelector('.comments-loader').classList.add('hidden');
 };
 
-renderBigPictures(photoObjects[0]);
+// renderBigPictures(photoObjects[0]);
+
+
+//
+//
+// /////////8. Личный проект: подробности//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//
+
+var formEditImage = document.querySelector('.img-upload__overlay');
+var btnUploadFile = document.querySelector('#upload-file');
+var btnUploadCancel = formEditImage.querySelector('#upload-cancel ');
+var pinEffect = formEditImage.querySelector('.effect-level__pin');
+var positionPinEffect = parseFloat(window.getComputedStyle(pinEffect).left);
+var ESC_KEYCODE = 27;
+var ENTER_KEYCODE = 13;
+
+var onEditImageEscPress = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    closeEditImage();
+  }
+};
+
+var openEditImage = function () {
+  formEditImage.classList.remove('hidden');
+  document.addEventListener('keydown', onEditImageEscPress);
+};
+
+var closeEditImage = function () {
+  formEditImage.classList.add('hidden');
+  document.removeEventListener('keydown', onEditImageEscPress);
+};
+
+// Изменение на элементе #upload-file вызывает функцию открытия попапа, которая
+// убирает класс hidden у блока .img-upload__overlay
+btnUploadFile.addEventListener('change', function () {
+  openEditImage();
+});
+
+// Клик на элемент #upload-cancel или на клавишу Esc Вызывает функцию, которая: {
+//   1) добавляет класс hidden у блока .img-upload__overlay,
+//   2) (не реализовано) сбрасывает значение value поля блока #upload-file, чтобы можно было загрузить одну и ту же картинку несколько раз
+//   3) удаляет обработчик Esc, так как он завязан на весь документ (внешний и невидимый)
+// }
+
+btnUploadCancel.addEventListener('click', function () {
+  closeEditImage();
+});
+
+btnUploadCancel.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    closeEditImage();
+  }
+});
+
+// ///////////////////////////////////
+// 1. функция высчитывает уровень насыщенности фильтра по положению пина.
+// данная логика работает при отпускании ползунка mouseup и при переключении слайда.
+// принимает максимальное значение фильтра
+// положение пина = свойство left у блока .effect-level__pin
+var changesSaturation = function (maxFilter, positionPin) {
+  return (positionPin * maxFilter) / 100;
+};
+
+// 2. Переключение слайдера: нужно совместить 2 списка объектов с одинаковыми id.
+// и проверять импуты на checked при клике на область с фильтрами....
+// если фильтр переключают, то positionPinEffect = 100 (сбрасывается значение ползунка на дефолт)
+// При переключении фильтра, предыдущий добавленный класс фильтра удаляется/заменяется.
+// Обработчик клика: при клике на .effects__preview--sepia
+// добавляется класс фильтра на превью изображения .img-upload__preview и изменяется значение насыщенности фильтра(обработчик mouseup)
+// через функцию changesSaturation(макс насыщенность фильтра, positionPinEffect)
+// var switchesFilters () {
+// Фильтры:
+
+// «Хром»
+// обработчик на блок: .effect-chrome
+// Добавить классс: effects__preview--chrome
+// CSS-свойство: filter: grayscale(0..1);
+
+// «Сепия»
+// обработчик на блок:
+// Добавить классс:
+// CSS-свойство filter: sepia(0..1);
+
+// «Марвин»
+// обработчик на блок:
+// Добавить классс:
+// CSS-свойство filter: invert(0..100%);
+
+// «Фобос»
+// обработчик на блок:
+// Добавить классс:
+// CSS-свойство filter: blur(0..3px);
+
+// «Зной»
+// обработчик на блок:
+// Добавить классс:
+// CSS-свойство filter: brightness(1..3);
+
+// «Оригинал»
+// обработчик на блок:
+// Удалить классы фильтров
+
+// 3. То же самое с размером, но ввести pinSize и positionPinSize
+// При нажатии на стрелки(добавить обработчик по клику)
+// плюс(.scale__control--bigger) и минус(.scale__control--smaller) 25 к счетчику размера .scale__control--value.
+// нужно добавить в css стиль для превью .img-upload__preview,
+// например transform: scale(0.75). Значение по-умолчанию: 1. шаг 0.25
+
+// ////////////   ПРИМЕРЫ    ////////////////////
+//
+//
+// Пример удаления обработчика по функци  с именем  on + объект + событие
+// button.addEventListener('click', onButtonClick);
+
+// Пример обнуления value
+// function go() {
+//   let zum = document.getElementById('addd').value;
+//   document.getElementById('addd').value = '';
+// }
+
+// Пример завязки кнопки открытия на клавишу энтер
+// setupOpen.addEventListener('keydown', function(evt) {
+//   if (evt.keyCode === ENTER_KEYCODE) {
+//     openPopup();
+//   }
+// });
+// ////////////////////////////////////////////////////
