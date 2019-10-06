@@ -142,20 +142,54 @@ var renderBigPictures = function (obj) {
 
 // renderBigPictures(photoObjects[0]);
 
-
-//
-//
 // /////////8. Личный проект: подробности//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
-//
-
-var formEditImage = document.querySelector('.img-upload__overlay');
-var btnUploadFile = document.querySelector('#upload-file');
-var btnUploadCancel = formEditImage.querySelector('#upload-cancel ');
-var pinEffect = formEditImage.querySelector('.effect-level__pin');
-var positionPinEffect = parseFloat(window.getComputedStyle(pinEffect).left);
+var zoomDefault = 100;
 var ESC_KEYCODE = 27;
 var ENTER_KEYCODE = 13;
+var formEditImage = document.querySelector('.img-upload__overlay');
+var btnUploadFile = document.querySelector('#upload-file');
+var btnUploadCancel = formEditImage.querySelector('#upload-cancel');
+var pinBlock = formEditImage.querySelector('.effect-level__pin');
+var pinBlockDepth = formEditImage.querySelector('.effect-level__depth');
+var prewiewUzerImage = formEditImage.querySelector('.img-upload__preview');
+var photoEffects = [
+  {
+    name: 'grayscale',
+    unit: '',
+    maxValue: 1,
+    effectClass: 'effects__preview--chrome',
+    btnRadio: formEditImage.querySelector('#effect-chrome'),
+  },
+  {
+    name: 'sepia',
+    unit: '',
+    maxValue: 1,
+    effectClass: 'effects__preview--sepia',
+    btnRadio: formEditImage.querySelector('#effect-sepia'),
+  },
+  {
+    name: 'invert',
+    unit: '%',
+    maxValue: 100,
+    effectClass: 'effects__preview--marvin',
+    btnRadio: formEditImage.querySelector('#effect-marvin'),
+  },
+  {
+    name: 'blur',
+    unit: 'px',
+    maxValue: 3,
+    effectClass: 'effects__preview--phobos',
+    btnRadio: formEditImage.querySelector('#effect-phobos'),
+  },
+  {
+    name: 'brightness',
+    unit: '',
+    maxValue: 3,
+    effectClass: 'effects__preview--heat',
+    btnRadio: formEditImage.querySelector('#effect-heat'),
+  }
+];
 
 var onEditImageEscPress = function (evt) {
   if (evt.keyCode === ESC_KEYCODE) {
@@ -165,25 +199,21 @@ var onEditImageEscPress = function (evt) {
 
 var openEditImage = function () {
   formEditImage.classList.remove('hidden');
+  effectLevel.classList.add('hidden');
   document.addEventListener('keydown', onEditImageEscPress);
+  prewiewUzerImage.style.transform = 'scale(' + (zoomDefault / 100) + ')';
+  zoomValue.value = zoomDefault + '%';
 };
 
 var closeEditImage = function () {
+  document.querySelector('#upload-select-image').reset();
   formEditImage.classList.add('hidden');
   document.removeEventListener('keydown', onEditImageEscPress);
 };
 
-// Изменение на элементе #upload-file вызывает функцию открытия попапа, которая
-// убирает класс hidden у блока .img-upload__overlay
 btnUploadFile.addEventListener('change', function () {
   openEditImage();
 });
-
-// Клик на элемент #upload-cancel или на клавишу Esc Вызывает функцию, которая: {
-//   1) добавляет класс hidden у блока .img-upload__overlay,
-//   2) (не реализовано) сбрасывает значение value поля блока #upload-file, чтобы можно было загрузить одну и ту же картинку несколько раз
-//   3) удаляет обработчик Esc, так как он завязан на весь документ (внешний и невидимый)
-// }
 
 btnUploadCancel.addEventListener('click', function () {
   closeEditImage();
@@ -195,59 +225,122 @@ btnUploadCancel.addEventListener('keydown', function (evt) {
   }
 });
 
-// ///////////////////////////////////
-// 1. функция высчитывает уровень насыщенности фильтра по положению пина.
-// данная логика работает при отпускании ползунка mouseup и при переключении слайда.
-// принимает максимальное значение фильтра
-// положение пина = свойство left у блока .effect-level__pin
-var changesSaturation = function (maxFilter, positionPin) {
+var changesSaturationFilter = function (maxFilter) {
+  var positionPin = parseFloat(pinBlock.style.left);
   return (positionPin * maxFilter) / 100;
 };
 
-// 2. Переключение слайдера: нужно совместить 2 списка объектов с одинаковыми id.
-// и проверять импуты на checked при клике на область с фильтрами....
-// если фильтр переключают, то positionPinEffect = 100 (сбрасывается значение ползунка на дефолт)
-// При переключении фильтра, предыдущий добавленный класс фильтра удаляется/заменяется.
-// Обработчик клика: при клике на .effects__preview--sepia
-// добавляется класс фильтра на превью изображения .img-upload__preview и изменяется значение насыщенности фильтра(обработчик mouseup)
-// через функцию changesSaturation(макс насыщенность фильтра, positionPinEffect)
-// var switchesFilters () {
-// Фильтры:
+var effectLevel = formEditImage.querySelector('.effect-level');
+var allEffectBlock = formEditImage.querySelector('.effects__list');
+var effectDefault = formEditImage.querySelector('#effect-none');
+var actualPhotoEffect = {
+  name: 'none',
+  unit: '',
+  maxValue: 0,
+};
 
-// «Хром»
-// обработчик на блок: .effect-chrome
-// Добавить классс: effects__preview--chrome
-// CSS-свойство: filter: grayscale(0..1);
+var renderPhotoEffect = function () {
+  var effectSaturation = changesSaturationFilter(actualPhotoEffect.maxValue);
+  prewiewUzerImage.style.filter = actualPhotoEffect.name + '(' + effectSaturation + actualPhotoEffect.unit + ')';
+};
 
-// «Сепия»
-// обработчик на блок:
-// Добавить классс:
-// CSS-свойство filter: sepia(0..1);
+var addEffect = function () {
+  for (var m = 0; m < photoEffects.length; m++) {
+    if (effectDefault.checked) {
+      effectLevel.classList.add('hidden');
+      prewiewUzerImage.style.filter = 'none';
+    }
+    if (!photoEffects[m].btnRadio.checked) {
+      prewiewUzerImage.classList.remove(photoEffects[m].effectClass);
+    }
+    if (photoEffects[m].btnRadio.checked) {
+      pinBlock.style.left = pinBlockDepth.style.width = '100%';
+      effectLevel.classList.remove('hidden');
+      prewiewUzerImage.classList.add(photoEffects[m].effectClass);
+      actualPhotoEffect = {
+        name: photoEffects[m].name,
+        unit: photoEffects[m].unit,
+        maxValue: photoEffects[m].maxValue,
+      };
+      renderPhotoEffect();
+    }
+  }
+};
 
-// «Марвин»
-// обработчик на блок:
-// Добавить классс:
-// CSS-свойство filter: invert(0..100%);
+allEffectBlock.addEventListener('click', function () {
+  addEffect();
+});
 
-// «Фобос»
-// обработчик на блок:
-// Добавить классс:
-// CSS-свойство filter: blur(0..3px);
+var onPinMouseup = function () {
+  pinBlock.style.left = pinBlockDepth.style.width = '50%';
+  renderPhotoEffect();
+};
 
-// «Зной»
-// обработчик на блок:
-// Добавить классс:
-// CSS-свойство filter: brightness(1..3);
+pinBlock.addEventListener('mouseup', onPinMouseup);
 
-// «Оригинал»
-// обработчик на блок:
-// Удалить классы фильтров
+// ///////////////////////////////////
 
-// 3. То же самое с размером, но ввести pinSize и positionPinSize
-// При нажатии на стрелки(добавить обработчик по клику)
-// плюс(.scale__control--bigger) и минус(.scale__control--smaller) 25 к счетчику размера .scale__control--value.
-// нужно добавить в css стиль для превью .img-upload__preview,
-// например transform: scale(0.75). Значение по-умолчанию: 1. шаг 0.25
+var zoomInControl = formEditImage.querySelector('.scale__control--bigger');
+var zoomOutControl = formEditImage.querySelector('.scale__control--smaller');
+var zoomValue = formEditImage.querySelector('.scale__control--value');
+var zoomStep = 25;
+var zoomMax = 100;
+var zoomMin = 25;
+
+var zoomChange = function (zoomStepVar) {
+  zoomOutControl.disabled = false;
+  zoomInControl.disabled = false;
+  zoomValue.value = parseFloat(zoomValue.value) + zoomStepVar + '%';
+  prewiewUzerImage.style.transform = 'scale(' + (parseFloat(zoomValue.value) / 100) + ')';
+};
+
+var zoomInChange = function () {
+  if (parseFloat(zoomValue.value) === zoomMax) {
+    zoomInControl.disabled = true;
+  } else {
+    zoomChange(zoomStep);
+  }
+};
+
+var zoomOutChange = function () {
+  if ((parseFloat(zoomValue.value)) === zoomMin) {
+    zoomOutControl.disabled = true;
+  } else {
+    zoomChange(-zoomStep);
+  }
+};
+
+zoomInControl.addEventListener('click', function () {
+  zoomInChange();
+});
+
+zoomOutControl.addEventListener('click', function () {
+  zoomOutChange();
+});
+
+// ///////////////////////////////////
+
+// 4. Выполнить валидацию хеш-тегов. {
+//     1) придётся вспомнить как работать с массивами:
+//        Набор хэш-тегов можно превратить в массив, воспользовавшись методом split.
+//        Он разбивает строки на массивы.
+//     2) написать цикл, который будет ходить по полученному массиву и проверять
+//        каждый из хэш-тегов на ограничения: {
+//        - хештеги не обязательны
+//        - начинаются с символа #
+//        - не может состоять только из одной решетки
+//        - хештеги разделяются пробелами
+//        - один и тот же хештег не может быть использован дважды
+//        - нельзя указать больше пяти хештегов
+//        - максимальная длина хештега 20 символов, включая решетку
+//        - теги не чувствительны к регистру
+//       }
+//     3) Если хотя бы один из тегов не проходит нужных проверок, можно воспользоваться
+//        методом setCustomValidity для того, чтобы задать полю правильное сообщение об ошибке
+//        у соответствующего поля.
+//     4) если фокус находится в поле ввода хэш-тега,
+//        нажатие на Esc не должно приводить к закрытию формы редактирования изображения
+
 
 // ////////////   ПРИМЕРЫ    ////////////////////
 //
