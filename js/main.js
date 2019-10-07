@@ -145,6 +145,7 @@ var renderBigPictures = function (obj) {
 // /////////8. Личный проект: подробности//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 var zoomDefault = 100;
+var HUNDRED_PERCENT = 100;
 var ESC_KEYCODE = 27;
 var ENTER_KEYCODE = 13;
 var formEditImage = document.querySelector('.img-upload__overlay');
@@ -201,7 +202,7 @@ var openEditImage = function () {
   formEditImage.classList.remove('hidden');
   effectLevel.classList.add('hidden');
   document.addEventListener('keydown', onEditImageEscPress);
-  prewiewUzerImage.style.transform = 'scale(' + (zoomDefault / 100) + ')';
+  prewiewUzerImage.style.transform = 'scale(' + (zoomDefault / HUNDRED_PERCENT) + ')';
   zoomValue.value = zoomDefault + '%';
 };
 
@@ -227,7 +228,7 @@ btnUploadCancel.addEventListener('keydown', function (evt) {
 
 var changesSaturationFilter = function (maxFilter) {
   var positionPin = parseFloat(pinBlock.style.left);
-  return (positionPin * maxFilter) / 100;
+  return (positionPin * maxFilter) / HUNDRED_PERCENT;
 };
 
 var effectLevel = formEditImage.querySelector('.effect-level');
@@ -291,7 +292,7 @@ var zoomChange = function (zoomStepVar) {
   zoomOutControl.disabled = false;
   zoomInControl.disabled = false;
   zoomValue.value = parseFloat(zoomValue.value) + zoomStepVar + '%';
-  prewiewUzerImage.style.transform = 'scale(' + (parseFloat(zoomValue.value) / 100) + ')';
+  prewiewUzerImage.style.transform = 'scale(' + (parseFloat(zoomValue.value) / HUNDRED_PERCENT) + ')';
 };
 
 var zoomInChange = function () {
@@ -320,30 +321,134 @@ zoomOutControl.addEventListener('click', function () {
 
 // ///////////////////////////////////
 
+var hashtagsInput = formEditImage.querySelector('.text__hashtags');
+var space = ' ';
+var hashtagsLimit = 5;
+// добавить инпуты скрытые для значенийфильтров и степени их наложения, чтобы отправлять их на сервер?
+var сommentInput = formEditImage.querySelector('.text__description');
+var arrHashtags = hashtagsInput.value.split(space);
+var validationComment = function () {
+  if (сommentInput.validity.tooLong) {
+    сommentInput.setCustomValidity('Длина комментария не должна превышать 140 символов');
+  } else {
+    сommentInput.setCustomValidity('');
+  }
+};
+// первый символ у каждого элемента всегда #, между элементами всегда пробел
+var result = [];
+function unique(arr) {
+  for (var n; n < arr.length; n++) {
+    if (!result.includes(arr[n])) {
+      result.push(arr[n]);
+    }
+  }
+}
+(unique(arrHashtags)
+console.log(result);
+// ^(#[A-zA-Z,0-9,А-Яа-яЁё]{1,19})(\s(#[A-zA-Z,0-9,А-Яа-яЁё]{1,19})){0,4}$
+// var validateHashtagsPattern = function () {
+//   for (var p; p < arrHashtags.length; p++) {
+//   // проверить каждый хештег на соответствие паттерну и вывести сообщение об ошибке?
+//   }
+//   if (arrHashtags.length > hashtagsLimit) {
+//     hashtagsInput.setCustomValidity('Нельзя указывать больше пяти хеш-тегов');
+//   } else {
+//     hashtagsInput.setCustomValidity('Хеш-теги разделяются пробелами');
+//   }
+// };
+
+var validateHashtags = function () {
+  // if (hashtagsInput.validity.valid) {
+  //   // сюда написать условие о повторяющихся хештегах без учета регистра
+  // } else
+  if (hashtagsInput.validity.patternMismatch) {
+    // validateHashtagsPattern();
+    hashtagsInput.setCustomValidity('1.Нельзя указывать больше пяти хеш-тегов. 2.Хеш-теги разделяются пробелами. 3.Хеш-тег не может состоять из одного символа #. 4.Максимальная длина хештега равна 20 символов, включая решетку.');
+  } else {
+    hashtagsInput.setCustomValidity('');
+  }
+  console.log('Оригинальная строка: "' + hashtagsInput.value + '"');
+  console.log('Разделитель: "' + space + '"');
+  console.log('Массив содержит ' + arrHashtags.length + ' элементов: ' + arrHashtags.join(' / '));
+};
+
+сommentInput.addEventListener('invalid', function () {
+  validationComment();
+});
+
+hashtagsInput.addEventListener('click', function () {
+  validateHashtags();
+});
+
+//   Использовать встроенную проверку формы. Добавить атрибут инпуту: pattern
+//  Проверить инпут на валидность ValidityState строка valid
 // 4. Выполнить валидацию хеш-тегов. {
 //     1) придётся вспомнить как работать с массивами:
 //        Набор хэш-тегов можно превратить в массив, воспользовавшись методом split.
 //        Он разбивает строки на массивы.
 //     2) написать цикл, который будет ходить по полученному массиву и проверять
 //        каждый из хэш-тегов на ограничения: {
-//        - хештеги не обязательны
+//        - хештеги не обязательны убрать "обязательность"?
 //        - начинаются с символа #
-//        - не может состоять только из одной решетки
+//          pattern-атрибут
+//        - не может состоять только из одной решетки 
+//          pattern-атрибут
+//          Объект-проверка ValidityState строка tooShort
 //        - хештеги разделяются пробелами
+//          pattern-атрибут
 //        - один и тот же хештег не может быть использован дважды
 //        - нельзя указать больше пяти хештегов
+//          Объект-проверка ValidityState строка rangeOverflow
 //        - максимальная длина хештега 20 символов, включая решетку
+//          max-атрибут
+//          Объект-проверка ValidityState строка tooLong
 //        - теги не чувствительны к регистру
 //       }
 //     3) Если хотя бы один из тегов не проходит нужных проверок, можно воспользоваться
 //        методом setCustomValidity для того, чтобы задать полю правильное сообщение об ошибке
-//        у соответствующего поля.
+//        у соответствующего поля. Все пункты ошибок выводятся одним сообщением, как в 
+//        https://htmlacademy.ru/blog/useful/html/form-validation-techniques
 //     4) если фокус находится в поле ввода хэш-тега,
 //        нажатие на Esc не должно приводить к закрытию формы редактирования изображения
 
 
 // ////////////   ПРИМЕРЫ    ////////////////////
+// проверка строки регулярным выражением, возвращает тру или фолс
+//  /regular/.test(str);
 //
+// Вывод уникального значения из массива
+// function unique(arr) {
+//   let result = [];
+
+//   for (let str of arr) {
+//     if (!result.includes(str)) {
+//       result.push(str);
+//     }
+//   }
+
+//   return result;
+// }
+//
+//  Пример вставки рандомных подсказок по валидации
+// сommentInput.addEventListener('invalid', function () {
+//   if (сommentInput.validity.tooLong) {
+//     сommentInput.setCustomValidity('Длина комментария не должна превышать 140 символов');
+//   } else if (сommentInput.validity.tooShort) {
+//     сommentInput.setCustomValidity('Длина комментария не должна превышать 140 символов');
+//   } else {
+//     сommentInput.setCustomValidity('');
+//   }
+// });
+//
+// Пример создания своей валидации
+// userNameInput.addEventListener('input', function (evt) {
+//   var target = evt.target;
+//   if (target.value.length < 2) {
+//     target.setCustomValidity('Имя должно состоять минимум из 2-х символов');
+//   } else {
+//     target.setCustomValidity('');
+//   }
+// });
 //
 // Пример удаления обработчика по функци  с именем  on + объект + событие
 // button.addEventListener('click', onButtonClick);
