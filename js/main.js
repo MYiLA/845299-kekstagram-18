@@ -58,6 +58,7 @@ var similarUserPhotos = document.querySelector('#picture')
 var blockPictures = document.querySelector('.pictures');
 var blockBigPicture = document.querySelector('.big-picture');
 var singleComment = document.querySelector('.social__comment');
+var blockPicturesContainer = document.querySelector('.pictures');
 
 var getRandomIntInclusive = function (min, max) {
   min = Math.ceil(min);
@@ -140,7 +141,10 @@ var renderBigPictures = function (obj) {
   blockBigPicture.querySelector('.comments-loader').classList.add('hidden');
 };
 
-// renderBigPictures(photoObjects[0]);
+
+blockPicturesContainer.querySelector('.picture').addEventListener('click', function () {
+  renderBigPictures(photoObjects[0]);
+});
 
 // /////////8. Личный проект: подробности//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -279,7 +283,7 @@ var onPinMouseup = function () {
 
 pinBlock.addEventListener('mouseup', onPinMouseup);
 
-// ///////////////////////////////////
+// ///////////////////////////////////Scale
 
 var zoomInControl = formEditImage.querySelector('.scale__control--bigger');
 var zoomOutControl = formEditImage.querySelector('.scale__control--smaller');
@@ -319,11 +323,11 @@ zoomOutControl.addEventListener('click', function () {
   zoomOutChange();
 });
 
-// ///////////////////////////////////
+// ///////////////////////////////////Валидация хеш-тегов
 
 var hashtagsInput = formEditImage.querySelector('.text__hashtags');
 var space = ' ';
-var hashtagsLimit = 5;
+// var hashtagsLimit = 5;
 // добавить инпуты скрытые для значенийфильтров и степени их наложения, чтобы отправлять их на сервер?
 var сommentInput = formEditImage.querySelector('.text__description');
 var arrHashtags = hashtagsInput.value.split(space);
@@ -335,16 +339,16 @@ var validationComment = function () {
   }
 };
 // первый символ у каждого элемента всегда #, между элементами всегда пробел
-var result = [];
-function unique(arr) {
-  for (var n; n < arr.length; n++) {
-    if (!result.includes(arr[n])) {
-      result.push(arr[n]);
-    }
-  }
-}
-(unique(arrHashtags)
-console.log(result);
+// попытка создать функцию по поиску уникальных строк в массиве
+// var result = [];
+// function unique(arr) {
+//   for (var n; n < arr.length; n++) {
+//     if (!result.includes(arr[n])) {
+//       result.push(arr[n]);
+//     }
+//   }
+// }
+
 // ^(#[A-zA-Z,0-9,А-Яа-яЁё]{1,19})(\s(#[A-zA-Z,0-9,А-Яа-яЁё]{1,19})){0,4}$
 // var validateHashtagsPattern = function () {
 //   for (var p; p < arrHashtags.length; p++) {
@@ -391,7 +395,7 @@ hashtagsInput.addEventListener('click', function () {
 //        - хештеги не обязательны убрать "обязательность"?
 //        - начинаются с символа #
 //          pattern-атрибут
-//        - не может состоять только из одной решетки 
+//        - не может состоять только из одной решетки
 //          pattern-атрибут
 //          Объект-проверка ValidityState строка tooShort
 //        - хештеги разделяются пробелами
@@ -406,7 +410,7 @@ hashtagsInput.addEventListener('click', function () {
 //       }
 //     3) Если хотя бы один из тегов не проходит нужных проверок, можно воспользоваться
 //        методом setCustomValidity для того, чтобы задать полю правильное сообщение об ошибке
-//        у соответствующего поля. Все пункты ошибок выводятся одним сообщением, как в 
+//        у соответствующего поля. Все пункты ошибок выводятся одним сообщением, как в
 //        https://htmlacademy.ru/blog/useful/html/form-validation-techniques
 //     4) если фокус находится в поле ввода хэш-тега,
 //        нажатие на Esc не должно приводить к закрытию формы редактирования изображения
