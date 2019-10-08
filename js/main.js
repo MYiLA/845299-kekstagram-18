@@ -119,11 +119,11 @@ blockPictures.appendChild(fragment);
 
 var renderComments = function (arr) {
   var fragmentComment = document.createDocumentFragment();
-  for (var l = 0; l < arr.length; l++) {
+  for (var a = 0; a < arr.length; a++) {
     var newComment = singleComment.cloneNode(true);
-    newComment.querySelector('.social__text').textContent = arr[l].message;
-    newComment.querySelector('.social__picture').src = arr[l].avatar;
-    newComment.querySelector('.social__picture').alt = arr[l].name;
+    newComment.querySelector('.social__text').textContent = arr[a].message;
+    newComment.querySelector('.social__picture').src = arr[a].avatar;
+    newComment.querySelector('.social__picture').alt = arr[a].name;
     fragmentComment.appendChild(newComment);
   }
   return fragmentComment;
@@ -146,8 +146,6 @@ blockPicturesContainer.querySelector('.picture').addEventListener('click', funct
   renderBigPictures(photoObjects[0]);
 });
 
-// /////////8. Личный проект: подробности//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//
 var zoomDefault = 100;
 var HUNDRED_PERCENT = 100;
 var ESC_KEYCODE = 27;
@@ -158,43 +156,41 @@ var btnUploadCancel = formEditImage.querySelector('#upload-cancel');
 var pinBlock = formEditImage.querySelector('.effect-level__pin');
 var pinBlockDepth = formEditImage.querySelector('.effect-level__depth');
 var prewiewUzerImage = formEditImage.querySelector('.img-upload__preview');
-var photoEffects = [
-  {
-    name: 'grayscale',
-    unit: '',
-    maxValue: 1,
-    effectClass: 'effects__preview--chrome',
-    btnRadio: formEditImage.querySelector('#effect-chrome'),
-  },
-  {
-    name: 'sepia',
-    unit: '',
-    maxValue: 1,
-    effectClass: 'effects__preview--sepia',
-    btnRadio: formEditImage.querySelector('#effect-sepia'),
-  },
-  {
-    name: 'invert',
-    unit: '%',
-    maxValue: 100,
-    effectClass: 'effects__preview--marvin',
-    btnRadio: formEditImage.querySelector('#effect-marvin'),
-  },
-  {
-    name: 'blur',
-    unit: 'px',
-    maxValue: 3,
-    effectClass: 'effects__preview--phobos',
-    btnRadio: formEditImage.querySelector('#effect-phobos'),
-  },
-  {
-    name: 'brightness',
-    unit: '',
-    maxValue: 3,
-    effectClass: 'effects__preview--heat',
-    btnRadio: formEditImage.querySelector('#effect-heat'),
-  }
-];
+var photoEffects = [{
+  name: 'grayscale',
+  unit: '',
+  maxValue: 1,
+  effectClass: 'effects__preview--chrome',
+  btnRadio: formEditImage.querySelector('#effect-chrome'),
+},
+{
+  name: 'sepia',
+  unit: '',
+  maxValue: 1,
+  effectClass: 'effects__preview--sepia',
+  btnRadio: formEditImage.querySelector('#effect-sepia'),
+},
+{
+  name: 'invert',
+  unit: '%',
+  maxValue: 100,
+  effectClass: 'effects__preview--marvin',
+  btnRadio: formEditImage.querySelector('#effect-marvin'),
+},
+{
+  name: 'blur',
+  unit: 'px',
+  maxValue: 3,
+  effectClass: 'effects__preview--phobos',
+  btnRadio: formEditImage.querySelector('#effect-phobos'),
+},
+{
+  name: 'brightness',
+  unit: '',
+  maxValue: 3,
+  effectClass: 'effects__preview--heat',
+  btnRadio: formEditImage.querySelector('#effect-heat'),
+}];
 
 var onEditImageEscPress = function (evt) {
   if (evt.keyCode === ESC_KEYCODE) {
@@ -210,8 +206,10 @@ var openEditImage = function () {
   zoomValue.value = zoomDefault + '%';
 };
 
+var form = document.querySelector('#upload-select-image');
+
 var closeEditImage = function () {
-  document.querySelector('#upload-select-image').reset();
+  form.reset();
   formEditImage.classList.add('hidden');
   document.removeEventListener('keydown', onEditImageEscPress);
 };
@@ -250,22 +248,22 @@ var renderPhotoEffect = function () {
 };
 
 var addEffect = function () {
-  for (var m = 0; m < photoEffects.length; m++) {
+  for (var b = 0; b < photoEffects.length; b++) {
     if (effectDefault.checked) {
       effectLevel.classList.add('hidden');
       prewiewUzerImage.style.filter = 'none';
     }
-    if (!photoEffects[m].btnRadio.checked) {
-      prewiewUzerImage.classList.remove(photoEffects[m].effectClass);
+    if (!photoEffects[b].btnRadio.checked) {
+      prewiewUzerImage.classList.remove(photoEffects[b].effectClass);
     }
-    if (photoEffects[m].btnRadio.checked) {
+    if (photoEffects[b].btnRadio.checked) {
       pinBlock.style.left = pinBlockDepth.style.width = '100%';
       effectLevel.classList.remove('hidden');
-      prewiewUzerImage.classList.add(photoEffects[m].effectClass);
+      prewiewUzerImage.classList.add(photoEffects[b].effectClass);
       actualPhotoEffect = {
-        name: photoEffects[m].name,
-        unit: photoEffects[m].unit,
-        maxValue: photoEffects[m].maxValue,
+        name: photoEffects[b].name,
+        unit: photoEffects[b].unit,
+        maxValue: photoEffects[b].maxValue,
       };
       renderPhotoEffect();
     }
@@ -282,8 +280,6 @@ var onPinMouseup = function () {
 };
 
 pinBlock.addEventListener('mouseup', onPinMouseup);
-
-// ///////////////////////////////////Scale
 
 var zoomInControl = formEditImage.querySelector('.scale__control--bigger');
 var zoomOutControl = formEditImage.querySelector('.scale__control--smaller');
@@ -323,150 +319,94 @@ zoomOutControl.addEventListener('click', function () {
   zoomOutChange();
 });
 
-// ///////////////////////////////////Валидация хеш-тегов
-
 var hashtagsInput = formEditImage.querySelector('.text__hashtags');
-var space = ' ';
-// var hashtagsLimit = 5;
-// добавить инпуты скрытые для значенийфильтров и степени их наложения, чтобы отправлять их на сервер?
+var HASHTAGS_LIMIT = 5;
+var MAX_HASHTAG_LENGTH = 20;
+var MAX_COMMENT_LENGTH = 140;
 var сommentInput = formEditImage.querySelector('.text__description');
-var arrHashtags = hashtagsInput.value.split(space);
-var validationComment = function () {
-  if (сommentInput.validity.tooLong) {
-    сommentInput.setCustomValidity('Длина комментария не должна превышать 140 символов');
+
+function verifyDuplicates(arr) {
+  var f;
+  var result = [];
+  for (f = 0; f < arr.length; f++) {
+    if (!result.includes(arr[f].toLowerCase())) {
+      result.push(arr[f].toLowerCase());
+    }
+  }
+  if (arr.length === result.length) {
+    return true;
+  }
+  return false;
+}
+
+var checkCommentValidity = function (commentBlock) {
+  if (commentBlock.value.length > MAX_COMMENT_LENGTH) {
+    commentBlock.setCustomValidity('Длина комментария не должна превышать 140 символов');
+    return false;
   } else {
-    сommentInput.setCustomValidity('');
+    commentBlock.setCustomValidity('');
+    return true;
   }
 };
-// первый символ у каждого элемента всегда #, между элементами всегда пробел
-// попытка создать функцию по поиску уникальных строк в массиве
-// var result = [];
-// function unique(arr) {
-//   for (var n; n < arr.length; n++) {
-//     if (!result.includes(arr[n])) {
-//       result.push(arr[n]);
-//     }
-//   }
-// }
 
-// ^(#[A-zA-Z,0-9,А-Яа-яЁё]{1,19})(\s(#[A-zA-Z,0-9,А-Яа-яЁё]{1,19})){0,4}$
-// var validateHashtagsPattern = function () {
-//   for (var p; p < arrHashtags.length; p++) {
-//   // проверить каждый хештег на соответствие паттерну и вывести сообщение об ошибке?
-//   }
-//   if (arrHashtags.length > hashtagsLimit) {
-//     hashtagsInput.setCustomValidity('Нельзя указывать больше пяти хеш-тегов');
-//   } else {
-//     hashtagsInput.setCustomValidity('Хеш-теги разделяются пробелами');
-//   }
-// };
+var checkHashtagsValidity = function (hashtags) {
+  if (hashtags.length > HASHTAGS_LIMIT) {
+    hashtagsInput.setCustomValidity('Нельзя указывать больше пяти хеш-тегов.');
+    return false;
+  }
 
-var validateHashtags = function () {
-  // if (hashtagsInput.validity.valid) {
-  //   // сюда написать условие о повторяющихся хештегах без учета регистра
-  // } else
-  if (hashtagsInput.validity.patternMismatch) {
-    // validateHashtagsPattern();
-    hashtagsInput.setCustomValidity('1.Нельзя указывать больше пяти хеш-тегов. 2.Хеш-теги разделяются пробелами. 3.Хеш-тег не может состоять из одного символа #. 4.Максимальная длина хештега равна 20 символов, включая решетку.');
+  for (var c = 0; c < hashtags.length; c++) {
+    if (hashtags[c][0] !== '#') {
+      hashtagsInput.setCustomValidity('Хеш-тег начинается с символа # (решётка).');
+      return false;
+    }
+  }
+
+  for (var d = 0; d < hashtags.length; d++) {
+    if (!hashtags[d][1]) {
+      hashtagsInput.setCustomValidity('Хеш-тег не может состоять только из одной решётки.');
+      return false;
+    }
+  }
+
+  for (var g = 0; g < hashtags.length; g++) {
+    var res = hashtags[g].match(/#/g);
+    if (res.length > 1) {
+      hashtagsInput.setCustomValidity('Хеш-теги разделяются пробелами.');
+      return false;
+    }
+  }
+
+  for (var e = 0; e < hashtags.length; e++) {
+    if (hashtags[e].length > MAX_HASHTAG_LENGTH) {
+      hashtagsInput.setCustomValidity('Максимальная длина одного хеш-тега 20 символов, включая решетку.');
+      return false;
+    }
+  }
+
+  if (!verifyDuplicates(hashtags)) {
+    hashtagsInput.setCustomValidity('Один и тот же хештег не может быть использован дважды.');
+    return false;
   } else {
     hashtagsInput.setCustomValidity('');
+    return true;
   }
-  console.log('Оригинальная строка: "' + hashtagsInput.value + '"');
-  console.log('Разделитель: "' + space + '"');
-  console.log('Массив содержит ' + arrHashtags.length + ' элементов: ' + arrHashtags.join(' / '));
 };
 
-сommentInput.addEventListener('invalid', function () {
-  validationComment();
+form.addEventListener('submit', function (evt) {
+  evt.preventDefault();
+  var hashtagsArr = hashtagsInput.value.split(' ');
+  var isValid = checkHashtagsValidity(hashtagsArr) && checkCommentValidity(сommentInput);
+  if (isValid) {
+    form.submit();
+  }
 });
 
-hashtagsInput.addEventListener('click', function () {
-  validateHashtags();
+hashtagsInput.addEventListener('keydown', function (evt) {
+  evt.stopPropagation();
 });
 
-//   Использовать встроенную проверку формы. Добавить атрибут инпуту: pattern
-//  Проверить инпут на валидность ValidityState строка valid
-// 4. Выполнить валидацию хеш-тегов. {
-//     1) придётся вспомнить как работать с массивами:
-//        Набор хэш-тегов можно превратить в массив, воспользовавшись методом split.
-//        Он разбивает строки на массивы.
-//     2) написать цикл, который будет ходить по полученному массиву и проверять
-//        каждый из хэш-тегов на ограничения: {
-//        - хештеги не обязательны убрать "обязательность"?
-//        - начинаются с символа #
-//          pattern-атрибут
-//        - не может состоять только из одной решетки
-//          pattern-атрибут
-//          Объект-проверка ValidityState строка tooShort
-//        - хештеги разделяются пробелами
-//          pattern-атрибут
-//        - один и тот же хештег не может быть использован дважды
-//        - нельзя указать больше пяти хештегов
-//          Объект-проверка ValidityState строка rangeOverflow
-//        - максимальная длина хештега 20 символов, включая решетку
-//          max-атрибут
-//          Объект-проверка ValidityState строка tooLong
-//        - теги не чувствительны к регистру
-//       }
-//     3) Если хотя бы один из тегов не проходит нужных проверок, можно воспользоваться
-//        методом setCustomValidity для того, чтобы задать полю правильное сообщение об ошибке
-//        у соответствующего поля. Все пункты ошибок выводятся одним сообщением, как в
-//        https://htmlacademy.ru/blog/useful/html/form-validation-techniques
-//     4) если фокус находится в поле ввода хэш-тега,
-//        нажатие на Esc не должно приводить к закрытию формы редактирования изображения
+сommentInput.addEventListener('keydown', function (evt) {
+  evt.stopPropagation();
+});
 
-
-// ////////////   ПРИМЕРЫ    ////////////////////
-// проверка строки регулярным выражением, возвращает тру или фолс
-//  /regular/.test(str);
-//
-// Вывод уникального значения из массива
-// function unique(arr) {
-//   let result = [];
-
-//   for (let str of arr) {
-//     if (!result.includes(str)) {
-//       result.push(str);
-//     }
-//   }
-
-//   return result;
-// }
-//
-//  Пример вставки рандомных подсказок по валидации
-// сommentInput.addEventListener('invalid', function () {
-//   if (сommentInput.validity.tooLong) {
-//     сommentInput.setCustomValidity('Длина комментария не должна превышать 140 символов');
-//   } else if (сommentInput.validity.tooShort) {
-//     сommentInput.setCustomValidity('Длина комментария не должна превышать 140 символов');
-//   } else {
-//     сommentInput.setCustomValidity('');
-//   }
-// });
-//
-// Пример создания своей валидации
-// userNameInput.addEventListener('input', function (evt) {
-//   var target = evt.target;
-//   if (target.value.length < 2) {
-//     target.setCustomValidity('Имя должно состоять минимум из 2-х символов');
-//   } else {
-//     target.setCustomValidity('');
-//   }
-// });
-//
-// Пример удаления обработчика по функци  с именем  on + объект + событие
-// button.addEventListener('click', onButtonClick);
-
-// Пример обнуления value
-// function go() {
-//   let zum = document.getElementById('addd').value;
-//   document.getElementById('addd').value = '';
-// }
-
-// Пример завязки кнопки открытия на клавишу энтер
-// setupOpen.addEventListener('keydown', function(evt) {
-//   if (evt.keyCode === ENTER_KEYCODE) {
-//     openPopup();
-//   }
-// });
-// ////////////////////////////////////////////////////
