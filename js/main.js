@@ -324,6 +324,7 @@ var HASHTAGS_LIMIT = 5;
 var MAX_HASHTAG_LENGTH = 20;
 var MAX_COMMENT_LENGTH = 140;
 var сommentInput = formEditImage.querySelector('.text__description');
+var formSubmitBtn = form.querySelector('#upload-submit');
 
 function verifyDuplicates(arr) {
   var f;
@@ -350,6 +351,10 @@ var checkCommentValidity = function (commentBlock) {
 };
 
 var checkHashtagsValidity = function (hashtags) {
+  if (hashtags.length === 1 && hashtags[0] === '') {
+    return true;
+  }
+
   if (hashtags.length > HASHTAGS_LIMIT) {
     hashtagsInput.setCustomValidity('Нельзя указывать больше пяти хеш-тегов.');
     return false;
@@ -393,12 +398,14 @@ var checkHashtagsValidity = function (hashtags) {
   }
 };
 
-form.addEventListener('submit', function (evt) {
+formSubmitBtn.addEventListener('click', function (evt) {
   evt.preventDefault();
   var hashtagsArr = hashtagsInput.value.split(' ');
   var isValid = checkHashtagsValidity(hashtagsArr) && checkCommentValidity(сommentInput);
   if (isValid) {
     form.submit();
+  } else {
+    hashtagsInput.reportValidity();
   }
 });
 
