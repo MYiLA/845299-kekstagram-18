@@ -406,6 +406,7 @@ formSubmitBtn.addEventListener('click', function (evt) {
     form.submit();
   } else {
     hashtagsInput.reportValidity();
+    сommentInput.reportValidity();
   }
 });
 
