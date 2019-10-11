@@ -1,15 +1,23 @@
 'use strict';
 (function () {
-  var zoomDefault = 100;
+  var ZOOM_DEFAULT = 100;
   var HUNDRED_PERCENT = 100;
   var ESC_KEYCODE = 27;
   var ENTER_KEYCODE = 13;
+  var ZOOM_STEP = 25;
+  var ZOOM_MAX = 100;
+  var ZOOM_MIN = 25;
+  var HASHTAGS_LIMIT = 5;
+  var MAX_HASHTAG_LENGTH = 20;
+  var MAX_COMMENT_LENGTH = 140;
+
   var formEditImage = document.querySelector('.img-upload__overlay');
   var btnUploadFile = document.querySelector('#upload-file');
   var btnUploadCancel = formEditImage.querySelector('#upload-cancel');
   var pinBlock = formEditImage.querySelector('.effect-level__pin');
   var pinBlockDepth = formEditImage.querySelector('.effect-level__depth');
   var prewiewUzerImage = formEditImage.querySelector('.img-upload__preview');
+
   var photoEffects = [{
     name: 'grayscale',
     unit: '',
@@ -57,8 +65,8 @@
     formEditImage.classList.remove('hidden');
     effectLevel.classList.add('hidden');
     document.addEventListener('keydown', onEditImageEscPress);
-    prewiewUzerImage.style.transform = 'scale(' + (zoomDefault / HUNDRED_PERCENT) + ')';
-    zoomValue.value = zoomDefault + '%';
+    prewiewUzerImage.style.transform = 'scale(' + (ZOOM_DEFAULT / HUNDRED_PERCENT) + ')';
+    zoomValue.value = ZOOM_DEFAULT + '%';
   };
 
   var form = document.querySelector('#upload-select-image');
@@ -139,9 +147,6 @@
   var zoomInControl = formEditImage.querySelector('.scale__control--bigger');
   var zoomOutControl = formEditImage.querySelector('.scale__control--smaller');
   var zoomValue = formEditImage.querySelector('.scale__control--value');
-  var zoomStep = 25;
-  var zoomMax = 100;
-  var zoomMin = 25;
 
   var zoomChange = function (zoomStepVar) {
     zoomOutControl.disabled = false;
@@ -151,18 +156,18 @@
   };
 
   var zoomInChange = function () {
-    if (parseFloat(zoomValue.value) === zoomMax) {
+    if (parseFloat(zoomValue.value) === ZOOM_MAX) {
       zoomInControl.disabled = true;
     } else {
-      zoomChange(zoomStep);
+      zoomChange(ZOOM_STEP);
     }
   };
 
   var zoomOutChange = function () {
-    if ((parseFloat(zoomValue.value)) === zoomMin) {
+    if ((parseFloat(zoomValue.value)) === ZOOM_MIN) {
       zoomOutControl.disabled = true;
     } else {
-      zoomChange(-zoomStep);
+      zoomChange(-ZOOM_STEP);
     }
   };
 
@@ -175,9 +180,6 @@
   });
 
   var hashtagsInput = formEditImage.querySelector('.text__hashtags');
-  var HASHTAGS_LIMIT = 5;
-  var MAX_HASHTAG_LENGTH = 20;
-  var MAX_COMMENT_LENGTH = 140;
   var сommentInput = formEditImage.querySelector('.text__description');
   var formSubmitBtn = form.querySelector('#upload-submit');
 

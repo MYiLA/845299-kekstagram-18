@@ -1,5 +1,5 @@
 'use strict';
-window.preview = (function () {
+(function () {
   var blockBigPicture = document.querySelector('.big-picture');
   var singleComment = document.querySelector('.social__comment');
   var renderComments = function (arr) {
@@ -25,7 +25,5 @@ window.preview = (function () {
     blockBigPicture.querySelector('.social__comment-count').classList.add('hidden');
     blockBigPicture.querySelector('.comments-loader').classList.add('hidden');
   };
-  return {
-    renderBigPictures: renderBigPictures
-  };
+  window.preview = renderBigPictures;
 })();

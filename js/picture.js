@@ -1,16 +1,9 @@
 'use strict';
-window.picture = (function () {
-  var amountPhotos = 25;
-  var photoObjects = [];
-
+(function () {
+  var blockPictures = document.querySelector('.pictures');
   var similarUserPhotos = document.querySelector('#picture')
     .content
     .querySelector('.picture');
-
-  var blockPictures = document.querySelector('.pictures');
-  for (var i = 0; i < amountPhotos; i++) {
-    photoObjects.push(window.data.generatePhotoObject(i));
-  }
 
   var renderUserPhotos = function (descAndPhoto) {
     var userPhotosElement = similarUserPhotos.cloneNode(true);
@@ -23,13 +16,9 @@ window.picture = (function () {
   };
 
   var fragment = document.createDocumentFragment();
-  for (var k = 0; k < amountPhotos; k++) {
-    fragment.appendChild(renderUserPhotos(photoObjects[k]));
+  for (var k = 0; k < window.data.length; k++) {
+    fragment.appendChild(renderUserPhotos(window.data[k]));
   }
 
   blockPictures.appendChild(fragment);
-
-  return {
-    photoObjects: photoObjects
-  };
 })();

@@ -1,5 +1,5 @@
 'use strict';
-window.data = (function () {
+(function () {
   var COMMENTS = [
     'Всё отлично!',
     'В целом всё неплохо. Но не всё.',
@@ -44,29 +44,19 @@ window.data = (function () {
     'Пытался сделать себяшку...',
   ];
 
-  var maxIdAvatars = 6;
-  var minIdAvatars = 1;
-  var maxQuantityComments = 5;
-  var minQuantityComments = 1;
-  var maxQuantityLikes = 200;
-  var minQuantityLikes = 15;
-
-  var generateRandomId = function (arr) {
-    var index = Math.round(Math.random() * (arr.length - 1));
-    return index;
-  };
-
-  var getRandomIntInclusive = function (min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  };
+  var MAX_ID_AVATARS = 6;
+  var MIN_ID_AVATARS = 1;
+  var AMOUNT_PHOTOS = 25;
+  var MAX_QUANTITY_COMMENTS = 5;
+  var MIN_QUANTITY_COMMENTS = 1;
+  var MAX_QUANTITY_LIKES = 200;
+  var MIN_QUANTITY_LIKES = 15;
 
   var createComment = function () {
-    var nameId = generateRandomId(NAMES);
+    var nameId = window.util.generateRandomId(NAMES);
     return {
-      avatar: ('img/avatar-' + getRandomIntInclusive(minIdAvatars, maxIdAvatars) + '.svg'),
-      message: COMMENTS[generateRandomId(COMMENTS)],
+      avatar: ('img/avatar-' + window.util.getRandomIntInclusive(MIN_ID_AVATARS, MAX_ID_AVATARS) + '.svg'),
+      message: COMMENTS[window.util.generateRandomId(COMMENTS)],
       name: NAMES[nameId],
     };
   };
@@ -74,20 +64,23 @@ window.data = (function () {
   var generatePhotoObject = function (index) {
 
     var photoComments = [];
-    for (var j = 0; j < getRandomIntInclusive(minQuantityComments, maxQuantityComments); j++) {
+    for (var j = 0; j < window.util.getRandomIntInclusive(MIN_QUANTITY_COMMENTS, MAX_QUANTITY_COMMENTS); j++) {
       photoComments.push(createComment());
     }
 
     return {
       url: ('photos/' + (index + 1) + '.jpg'),
-      description: DESC_PHOTOS[generateRandomId(DESC_PHOTOS)],
-      likes: getRandomIntInclusive(minQuantityLikes, maxQuantityLikes),
+      description: DESC_PHOTOS[window.util.generateRandomId(DESC_PHOTOS)],
+      likes: window.util.getRandomIntInclusive(MIN_QUANTITY_LIKES, MAX_QUANTITY_LIKES),
       quantityComments: photoComments.length,
       comments: photoComments,
     };
   };
 
-  return {
-    generatePhotoObject: generatePhotoObject
-  };
+  var photoObjects = [];
+  for (var i = 0; i < AMOUNT_PHOTOS; i++) {
+    photoObjects.push(generatePhotoObject(i));
+  }
+
+  window.data = photoObjects;
 })();
