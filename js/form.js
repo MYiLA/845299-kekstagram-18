@@ -55,6 +55,12 @@
   }
   ];
 
+  var addDefoltEffect = function () {
+    effectDefault.checked = true;
+    effectLevel.classList.add('hidden');
+    prewiewUzerImage.style.filter = 'none';
+  };
+
   var onEditImageEscPress = function (evt) {
     if (evt.keyCode === ESC_KEYCODE) {
       closeEditImage();
@@ -74,6 +80,11 @@
   var closeEditImage = function () {
     form.reset();
     formEditImage.classList.add('hidden');
+    zoomValue.value = ZOOM_DEFAULT + '%';
+    prewiewUzerImage.style.transform = 'scale(' + (ZOOM_DEFAULT / HUNDRED_PERCENT) + ')';
+    addDefoltEffect();
+    // 3. поля ввода хэш-тегов и комментария очищаются
+    // 4. поле загрузки фотографии, стилизованной под букву "О" очищается
     document.removeEventListener('keydown', onEditImageEscPress);
   };
 
@@ -113,8 +124,7 @@
   var addEffect = function () {
     for (var b = 0; b < photoEffects.length; b++) {
       if (effectDefault.checked) {
-        effectLevel.classList.add('hidden');
-        prewiewUzerImage.style.filter = 'none';
+        addDefoltEffect();
       }
       if (!photoEffects[b].btnRadio.checked) {
         prewiewUzerImage.classList.remove(photoEffects[b].effectClass);
@@ -255,15 +265,35 @@
     }
   };
 
+  var addRedFrame = function (validityCheck, inputBlock) {
+    if (!validityCheck) {
+      inputBlock.style.boxShadow = '0 0 0 6px rgba(223, 30, 30, 0.9)';
+    } else {
+      inputBlock.style.boxShadow = 'none';
+    }
+  };
+
+  // 1. Загрузка успешна: closeEditImage +
+  //    На экран выводится сообщение об успешной загрузке изображения.
+  //    Разметку сообщения, которая находится блоке #success внутри шаблона template,
+  //    нужно разместить в main. Сообщение должно исчезать после нажатия на кнопку .success__button,
+  //    по нажатию на клавишу Esc и по клику на произвольную область экрана за пределами блока с сообщением.
+
+  // //////////////////////////////////////////////
+
   formSubmitBtn.addEventListener('click', function (evt) {
     evt.preventDefault();
     var hashtagsArr = hashtagsInput.value.split(' ');
     var isValid = checkHashtagsValidity(hashtagsArr) && checkCommentValidity(сommentInput);
     if (isValid) {
-      form.submit();
+      window.upload(new FormData(form), function () { // (response) - нужно определить функцию успешного ответа? Почему параметр подчеркнут Eslit-ом?
+        closeEditImage();
+      });
     } else {
       hashtagsInput.reportValidity();
       сommentInput.reportValidity();
+      addRedFrame(checkHashtagsValidity(hashtagsArr), hashtagsInput);
+      addRedFrame(checkCommentValidity(сommentInput), сommentInput);
     }
   });
 
@@ -274,4 +304,5 @@
   сommentInput.addEventListener('keydown', function (evt) {
     evt.stopPropagation();
   });
+
 })();

@@ -1,8 +1,11 @@
 'use strict';
 (function () {
-  var blockPicturesContainer = document.querySelector('.pictures');
+  var successHandler = function (photoObjects) {
+    var blockPicturesContainer = document.querySelector('.pictures');
+    blockPicturesContainer.querySelector('.picture').addEventListener('click', function () {
+      window.preview(photoObjects[0]);
+    });
+  };
 
-  blockPicturesContainer.querySelector('.picture').addEventListener('click', function () {
-    window.preview(window.data[0]);
-  });
+  window.load(successHandler, window.picture.errorHandler);
 })();
