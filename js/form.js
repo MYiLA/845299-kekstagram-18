@@ -286,7 +286,7 @@
     var hashtagsArr = hashtagsInput.value.split(' ');
     var isValid = checkHashtagsValidity(hashtagsArr) && checkCommentValidity(сommentInput);
     if (isValid) {
-      window.upload(new FormData(form), function () { // (response) - нужно определить функцию успешного ответа? Почему параметр подчеркнут Eslit-ом?
+      window.backend.upload(new FormData(form), function () { // (response) - нужно определить функцию успешного ответа? Почему параметр подчеркнут Eslit-ом?
         closeEditImage();
       });
     } else {

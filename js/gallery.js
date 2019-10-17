@@ -7,5 +7,5 @@
     });
   };
 
-  window.load(successHandler, window.picture.errorHandler);
+  window.backend.load(successHandler, window.picture.errorHandler);
 })();

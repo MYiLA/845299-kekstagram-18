@@ -34,7 +34,7 @@
     main.appendChild(fragment);
   };
 
-  window.load(successHandler, errorHandler);
+  window.backend.load(successHandler, errorHandler);
   window.picture = {
     errorHandler: errorHandler,
   };
