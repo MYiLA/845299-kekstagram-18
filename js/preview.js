@@ -4,11 +4,11 @@
   var singleComment = document.querySelector('.social__comment');
   var renderComments = function (arr) {
     var fragmentComment = document.createDocumentFragment();
-    for (var a = 0; a < arr.length; a++) {
+    for (var i = 0; i < arr.length; i++) {
       var newComment = singleComment.cloneNode(true);
-      newComment.querySelector('.social__text').textContent = arr[a].message;
-      newComment.querySelector('.social__picture').src = arr[a].avatar;
-      newComment.querySelector('.social__picture').alt = arr[a].name;
+      newComment.querySelector('.social__text').textContent = arr[i].message;
+      newComment.querySelector('.social__picture').src = arr[i].avatar;
+      newComment.querySelector('.social__picture').alt = arr[i].name;
       fragmentComment.appendChild(newComment);
     }
     return fragmentComment;

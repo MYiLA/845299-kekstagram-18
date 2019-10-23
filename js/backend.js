@@ -29,9 +29,17 @@
     xhr.addEventListener('error', function () {
       onError('Произошла ошибка соединения');
     });
+
     xhr.addEventListener('timeout', function () {
       onError('Закончился срок действия запроса');
     });
+
+    // xhr.addEventListener('load', function () {
+    //   xhr.onloadend= function () {
+    //     console.log('вжухэ')
+    //   debugger
+    //   }
+    // });
 
     xhr.timeout = 10000;
 
