@@ -52,17 +52,14 @@
     if (filterButtons[0].classList.contains('img-filters__button--active')) {
       return arr;
     }
-    if (filterButtons[1].classList.contains('img-filters__button--active')) { // Случайные — 10 случайных, не повторяющихся фотографий.
-      var randomPhotosArr = arr;
-      // 1. отфильтровать случайно индексы (mathRandom) из 25 элементов, создать из них массив без повторов и обрезать массив
-      // 2. перемешать случайно индексы через sort и обрезать (возможно ли это сделать?)
-      //   var randomPhotosArr = arr.filter
-      //   return randomPhotosArr;
-      console.log('Рандомный массив фото');
-      console.log(randomPhotosArr);
+
+    if (filterButtons[1].classList.contains('img-filters__button--active')) {
+      var randomPhotosNumber = 10;
+      var randomPhotosArr = window.util.randomReshuffleArr(arr).slice(0, randomPhotosNumber);
       return randomPhotosArr;
     }
-    if (filterButtons[2].classList.contains('img-filters__button--active')) { // Обсуждаемые — фотографии, отсортированные в порядке убывания количества комментариев.
+
+    if (filterButtons[2].classList.contains('img-filters__button--active')) {
       var discussedPhotosArr = arr.slice().sort(function (first, second) {
         if (first.comments.length < second.comments.length) {
           return 1;
@@ -72,8 +69,10 @@
           return 0;
         }
       });
+
       return discussedPhotosArr;
     }
+    return arr;
   };
 
   var main = document.querySelector('main');
