@@ -24,6 +24,26 @@
     blockBigPicture.querySelector('.social__comments').appendChild(renderComments(obj.comments));
     blockBigPicture.querySelector('.social__comment-count').classList.add('hidden');
     blockBigPicture.querySelector('.comments-loader').classList.add('hidden');
+
+    var buttonCloze = blockBigPicture.querySelector('#picture-cancel');
+    buttonCloze.addEventListener('click', function () {
+      blockBigPicture.classList.add('hidden');
+    });
+
+    var closeBigPicture = function () {
+      blockBigPicture.classList.add('hidden');
+      document.removeEventListener('keydown', onBigPictureEscPress);
+    };
+
+    var onBigPictureEscPress = function (evt) {
+      if (evt.keyCode === window.util.keyCodeButton.esc) {
+        closeBigPicture();
+      }
+    };
+
+    document.addEventListener('keydown', onBigPictureEscPress);
   };
+
   window.preview = renderBigPictures;
+
 })();

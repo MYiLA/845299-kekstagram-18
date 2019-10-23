@@ -23,20 +23,24 @@
 
   // FilterToggle(filterButtons);
 
-  var renderUserPhotos = function (dataPhoto) {
+  var renderPhoto = function (descAndPhoto) {
     var similarUserPhotos = document.querySelector('#picture')
       .content
       .querySelector('.picture');
+    var userPhotosElement = similarUserPhotos.cloneNode(true);
 
-    var renderPhoto = function (descAndPhoto) {
-      var userPhotosElement = similarUserPhotos.cloneNode(true);
+    userPhotosElement.querySelector('.picture__img').src = descAndPhoto.url;
+    userPhotosElement.querySelector('.picture__likes').textContent = descAndPhoto.likes;
+    userPhotosElement.querySelector('.picture__comments').textContent = descAndPhoto.comments.length;
 
-      userPhotosElement.querySelector('.picture__img').src = descAndPhoto.url;
-      userPhotosElement.querySelector('.picture__likes').textContent = descAndPhoto.likes;
-      userPhotosElement.querySelector('.picture__comments').textContent = descAndPhoto.comments.length;
+    userPhotosElement.addEventListener('click', function () {
+      window.preview(descAndPhoto);
+    });
 
-      return userPhotosElement;
-    };
+    return userPhotosElement;
+  };
+
+  var renderUserPhotos = function (dataPhoto) {
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < dataPhoto.length; i++) {
       fragment.appendChild(renderPhoto(dataPhoto[i]));
@@ -46,10 +50,7 @@
 
   var updatePhotos = function (arr) {
     if (filterButtons[0].classList.contains('img-filters__button--active')) {
-      console.log('Изначальный массив фото');
-      console.log(arr);
       return arr;
-
     }
     if (filterButtons[1].classList.contains('img-filters__button--active')) { // Случайные — 10 случайных, не повторяющихся фотографий.
       var randomPhotosArr = arr;
@@ -71,8 +72,6 @@
           return 0;
         }
       });
-      console.log('Обсуждаемый массив фото');
-      console.log(discussedPhotosArr);
       return discussedPhotosArr;
     }
   };
@@ -89,79 +88,57 @@
     main.appendChild(fragment);
   };
 
-  var onSuccess = function (data) {
-    var photoObjects = data; // Сохранила данные для дальнейшей фильтрации
-    renderUserPhotos(photoObjects); //  Рендер списка фотографий с текущими данными
-    filterBlock.classList.remove('img-filters--inactive'); // после загрузки страницы отображаются фильтры
-
-    var onFilterClick = function (buttonsArr, index) {
-      for (var i = 0; i < buttonsArr.length; i++) {
-        if (buttonsArr[i].classList.contains('img-filters__button--active')) {
-          buttonsArr[i].classList.remove('img-filters__button--active')
-        }
+  var removeOldPictures = function () {
+    var pictures = document.querySelectorAll('.picture');
+    if (pictures.length) {
+      for (var i = 0; i < pictures.length; i++) {
+        pictures[i].remove();
       }
-      buttonsArr[index].classList.add('img-filters__button--active');
-      // Удаление старых данных
-      // Рендер новых данных
-      renderUserPhotos(updatePhotos(photoObjects));
-    };
+    }
+  };
 
+  var onFilterClick = function (buttonsArr, index, photoObjects) {
+    for (var i = 0; i < buttonsArr.length; i++) {
+      if (buttonsArr[i].classList.contains('img-filters__button--active')) {
+        buttonsArr[i].classList.remove('img-filters__button--active');
+      }
+    }
+    buttonsArr[index].classList.add('img-filters__button--active');
+    removeOldPictures();
+    renderUserPhotos(updatePhotos(photoObjects));
+  };
+
+  var setupFilter = function (photoObjects) {
+    filterBlock.classList.remove('img-filters--inactive');
     filterButtons[1].addEventListener('click', function () {
-      onFilterClick(filterButtons, 1);
+      onFilterClick(filterButtons, 1, photoObjects);
     });
     filterButtons[2].addEventListener('click', function () {
-      onFilterClick(filterButtons, 2);
+      onFilterClick(filterButtons, 2, photoObjects);
     });
     filterButtons[0].addEventListener('click', function () {
-      onFilterClick(filterButtons, 0);
+      onFilterClick(filterButtons, 0, photoObjects);
     });
+  };
+
+  var onSuccess = function (data) {
+    var photoObjects = data;
+    renderUserPhotos(photoObjects);
+    setupFilter(photoObjects);
   };
 
   window.backend.load(onSuccess, onError);
-  window.picture = {
-    onError: onError,
-  };
+
 })();
 
 // черновик
 
-// ///////////////////////////////////// Проверка загруженных данных
-//   blockPictures.querySelector('.picture__img').onload = function () {
-//  console.log('загрузилось?');
-// debugger
-//   };
+// Фильтр. Функция, которая перемешивает элементы в массиве
+// взять первые 10 элементов ( обрезать слайсом)
 
-// instanceOfFileRequest.onprogress = function;
-// request.onprogress = function (status) {
-//   var progress = document.querySelector('progress');
+// Дребезжание. 1. в util обернуть функцию, которую необходимо замедлить.
+// 2. Не забыть удалить лишние точки слежения.
 
-//   progress.value = status.loaded;
-//   progress.max   = status.total;
-// }
-
-// console.log(xhr.onprogress);
-// if (onSuccess === true) {
-//   console.log('данные загружены!');
-// }
-// /////////////////////////////////////////
-
-// //   document.removeEventListener('keydown', onEditImageEscPress);
-// // };
-
-// // filterButton[popular].addEventListener('click', onFilterClick(popular));
-
-// // //
-
-// // //////////////////////////// Обновление фильтра, относительно активной кнопки
-
-// // //////////////////////////
-
-// 2. Добавьте обработчики изменения фильтров, которые будут управлять порядком отрисовки элементов на странице:
-//       Популярные — фотографии в изначальном порядке.
-//
-//
-// 3. При переключении фильтра все фотографии, отрисованные ранее, нужно убрать и вместо них показать те,
-//    которые подходят под новые условия.
 // 4. Воспользуйтесь приёмом «устранение дребезга» для того, чтобы сделать так,
 //    чтобы при переключении фильтра обновление списка элементов, подходящих под фильтры,
 //    происходило не чаще, чем один раз в 500 миллисекунд.

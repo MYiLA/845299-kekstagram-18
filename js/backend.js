@@ -34,13 +34,6 @@
       onError('Закончился срок действия запроса');
     });
 
-    // xhr.addEventListener('load', function () {
-    //   xhr.onloadend= function () {
-    //     console.log('вжухэ')
-    //   debugger
-    //   }
-    // });
-
     xhr.timeout = 10000;
 
     xhr.open('GET', URL_LOAD);
