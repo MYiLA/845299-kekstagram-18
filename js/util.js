@@ -1,5 +1,8 @@
 'use strict';
 (function () {
+  var DEBOUNCE_INTERVAL = 500;
+  var main = document.querySelector('main');
+
   var generateRandomId = function (arr) {
     var index = Math.round(Math.random() * (arr.length - 1));
     return index;
@@ -26,8 +29,6 @@
     return arr;
   }
 
-  var DEBOUNCE_INTERVAL = 500;
-
   var debounce = function (cb) {
     var lastTimeout = null;
 
@@ -48,5 +49,6 @@
     keyCodeButton: keyCodeButton,
     randomReshuffleArr: randomReshuffleArr,
     debounce: debounce,
+    main: main,
   };
 })();
