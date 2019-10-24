@@ -40,13 +40,13 @@
     return userPhotosElement;
   };
 
-  var renderUserPhotos = function (dataPhoto) {
+  var renderUserPhotos = window.util.debounce(function (dataPhoto) {
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < dataPhoto.length; i++) {
       fragment.appendChild(renderPhoto(dataPhoto[i]));
     }
     blockPictures.appendChild(fragment);
-  };
+  });
 
   var updatePhotos = function (arr) {
     if (filterButtons[0].classList.contains('img-filters__button--active')) {
@@ -87,14 +87,14 @@
     main.appendChild(fragment);
   };
 
-  var removeOldPictures = function () {
+  var removeOldPictures = window.util.debounce(function () {
     var pictures = document.querySelectorAll('.picture');
     if (pictures.length) {
       for (var i = 0; i < pictures.length; i++) {
         pictures[i].remove();
       }
     }
-  };
+  });
 
   var onFilterClick = function (buttonsArr, index, photoObjects) {
     for (var i = 0; i < buttonsArr.length; i++) {
@@ -129,15 +129,3 @@
   window.backend.load(onSuccess, onError);
 
 })();
-
-// черновик
-
-// Фильтр. Функция, которая перемешивает элементы в массиве
-// взять первые 10 элементов ( обрезать слайсом)
-
-// Дребезжание. 1. в util обернуть функцию, которую необходимо замедлить.
-// 2. Не забыть удалить лишние точки слежения.
-
-// 4. Воспользуйтесь приёмом «устранение дребезга» для того, чтобы сделать так,
-//    чтобы при переключении фильтра обновление списка элементов, подходящих под фильтры,
-//    происходило не чаще, чем один раз в 500 миллисекунд.
