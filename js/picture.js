@@ -7,22 +7,6 @@
   var discussedFilter = document.querySelector('#filter-discussed');
   var filterButtons = [popularFilter, randomFilter, discussedFilter];
 
-  // Переключение фильтра. универсальная функция нажатия на кнопку
-
-
-  // слушатели по клику нажатия на кнопки
-
-  // попытка рефакторинга тоггла
-  // var FilterToggle = function (buttonsArr) {
-  //   for (var i = 0; i < buttonsArr.length; i++) {
-  //     filterButtons[i].addEventListener('click', function () {
-  //       onFilterClick(filterButtons, i);
-  //     });
-  //   }
-  // };
-
-  // FilterToggle(filterButtons);
-
   var renderPhoto = function (descAndPhoto) {
     var similarUserPhotos = document.querySelector('#picture')
       .content
@@ -55,7 +39,7 @@
 
     if (filterButtons[1].classList.contains('img-filters__button--active')) {
       var randomPhotosNumber = 10;
-      var randomPhotosArr = window.util.randomReshuffleArr(arr).slice(0, randomPhotosNumber);
+      var randomPhotosArr = window.util.randomReshuffleArr(arr.slice()).slice(0, randomPhotosNumber);
       return randomPhotosArr;
     }
 
