@@ -11,8 +11,42 @@
     return Math.floor(Math.random() * (max - min + 1)) + min;
   };
 
+  var keyCodeButton = {
+    esc: 27,
+    enter: 13,
+  };
+
+  function randomReshuffleArr(arr) {
+    for (var i = arr.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var temp = arr[j];
+      arr[j] = arr[i];
+      arr[i] = temp;
+    }
+    return arr;
+  }
+
+  var DEBOUNCE_INTERVAL = 500;
+
+  var debounce = function (cb) {
+    var lastTimeout = null;
+
+    return function () {
+      var parameters = arguments;
+      if (lastTimeout) {
+        window.clearTimeout(lastTimeout);
+      }
+      lastTimeout = window.setTimeout(function () {
+        cb.apply(null, parameters);
+      }, DEBOUNCE_INTERVAL);
+    };
+  };
+
   window.util = {
     generateRandomId: generateRandomId,
     getRandomIntInclusive: getRandomIntInclusive,
+    keyCodeButton: keyCodeButton,
+    randomReshuffleArr: randomReshuffleArr,
+    debounce: debounce,
   };
 })();

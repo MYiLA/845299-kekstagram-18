@@ -2,8 +2,6 @@
 (function () {
   var ZOOM_DEFAULT = 100;
   var HUNDRED_PERCENT = 100;
-  var ESC_KEYCODE = 27;
-  var ENTER_KEYCODE = 13;
   var ZOOM_STEP = 25;
   var ZOOM_MAX = 100;
   var ZOOM_MIN = 25;
@@ -18,41 +16,42 @@
   var pinBlockDepth = formEditImage.querySelector('.effect-level__depth');
   var prewiewUzerImage = formEditImage.querySelector('.img-upload__preview');
 
-  var photoEffects = [{
-    name: 'grayscale',
-    unit: '',
-    maxValue: 1,
-    effectClass: 'effects__preview--chrome',
-    btnRadio: formEditImage.querySelector('#effect-chrome'),
-  },
-  {
-    name: 'sepia',
-    unit: '',
-    maxValue: 1,
-    effectClass: 'effects__preview--sepia',
-    btnRadio: formEditImage.querySelector('#effect-sepia'),
-  },
-  {
-    name: 'invert',
-    unit: '%',
-    maxValue: 100,
-    effectClass: 'effects__preview--marvin',
-    btnRadio: formEditImage.querySelector('#effect-marvin'),
-  },
-  {
-    name: 'blur',
-    unit: 'px',
-    maxValue: 3,
-    effectClass: 'effects__preview--phobos',
-    btnRadio: formEditImage.querySelector('#effect-phobos'),
-  },
-  {
-    name: 'brightness',
-    unit: '',
-    maxValue: 3,
-    effectClass: 'effects__preview--heat',
-    btnRadio: formEditImage.querySelector('#effect-heat'),
-  }
+  var photoEffects = [
+    {
+      name: 'grayscale',
+      unit: '',
+      maxValue: 1,
+      effectClass: 'effects__preview--chrome',
+      btnRadio: formEditImage.querySelector('#effect-chrome'),
+    },
+    {
+      name: 'sepia',
+      unit: '',
+      maxValue: 1,
+      effectClass: 'effects__preview--sepia',
+      btnRadio: formEditImage.querySelector('#effect-sepia'),
+    },
+    {
+      name: 'invert',
+      unit: '%',
+      maxValue: 100,
+      effectClass: 'effects__preview--marvin',
+      btnRadio: formEditImage.querySelector('#effect-marvin'),
+    },
+    {
+      name: 'blur',
+      unit: 'px',
+      maxValue: 3,
+      effectClass: 'effects__preview--phobos',
+      btnRadio: formEditImage.querySelector('#effect-phobos'),
+    },
+    {
+      name: 'brightness',
+      unit: '',
+      maxValue: 3,
+      effectClass: 'effects__preview--heat',
+      btnRadio: formEditImage.querySelector('#effect-heat'),
+    }
   ];
 
   var addDefoltEffect = function () {
@@ -62,7 +61,7 @@
   };
 
   var onEditImageEscPress = function (evt) {
-    if (evt.keyCode === ESC_KEYCODE) {
+    if (evt.keyCode === window.util.keyCodeButton.esc) {
       closeEditImage();
     }
   };
@@ -83,8 +82,6 @@
     zoomValue.value = ZOOM_DEFAULT + '%';
     prewiewUzerImage.style.transform = 'scale(' + (ZOOM_DEFAULT / HUNDRED_PERCENT) + ')';
     addDefoltEffect();
-    // 3. поля ввода хэш-тегов и комментария очищаются
-    // 4. поле загрузки фотографии, стилизованной под букву "О" очищается
     document.removeEventListener('keydown', onEditImageEscPress);
   };
 
@@ -97,7 +94,7 @@
   });
 
   btnUploadCancel.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === ENTER_KEYCODE) {
+    if (evt.keyCode === window.util.keyCodeButton.enter) {
       closeEditImage();
     }
   });
