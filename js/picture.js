@@ -59,7 +59,6 @@
     return arr;
   };
 
-  var main = document.querySelector('main');
   var onError = function (errorMessage) {
     var similarErrorMessage = document.querySelector('#error')
       .content
@@ -68,7 +67,7 @@
     errorMessageElement.querySelector('.error__title').textContent = errorMessage;
     var fragment = document.createDocumentFragment();
     fragment.appendChild(errorMessageElement);
-    main.appendChild(fragment);
+    window.util.main.appendChild(fragment);
   };
 
   var removeOldPictures = window.util.debounce(function () {

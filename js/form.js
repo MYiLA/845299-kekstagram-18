@@ -262,6 +262,42 @@
     }
   };
 
+  var showSuccessMessage = function () {
+    var similarSuccessMessage = document.querySelector('#success')
+    .content
+    .querySelector('.success');
+    var successMessageElement = similarSuccessMessage.cloneNode(true);
+    var fragment = document.createDocumentFragment();
+    fragment.appendChild(successMessageElement);
+    window.util.main.appendChild(fragment);
+    var clozeButton = document.querySelector('.success__button');
+    clozeButton.addEventListener('click', function () {
+      closeSuccessMessage();
+    });
+    document.addEventListener('keydown', onSuccessMessageEscPress);
+    document.addEventListener('click', onSuccessMessageClickClose);
+    document.querySelector('.success__inner').addEventListener('click', function (evt) {
+      evt.stopPropagation();
+    });
+  };
+
+  var onSuccessMessageEscPress = function (evt) {
+    if (evt.keyCode === window.util.keyCodeButton.esc) {
+      closeSuccessMessage();
+    }
+  };
+
+  var onSuccessMessageClickClose = function () {
+    closeSuccessMessage();
+  };
+
+  var closeSuccessMessage = function () {
+    var successMessage = document.querySelector('.success');
+    successMessage.remove();
+    document.removeEventListener('keydown', onSuccessMessageEscPress);
+    document.removeEventListener('click', onSuccessMessageClickClose);
+  };
+
   var addRedFrame = function (validityCheck, inputBlock) {
     if (!validityCheck) {
       inputBlock.style.boxShadow = '0 0 0 6px rgba(223, 30, 30, 0.9)';
@@ -270,21 +306,14 @@
     }
   };
 
-  // 1. Загрузка успешна: closeEditImage +
-  //    На экран выводится сообщение об успешной загрузке изображения.
-  //    Разметку сообщения, которая находится блоке #success внутри шаблона template,
-  //    нужно разместить в main. Сообщение должно исчезать после нажатия на кнопку .success__button,
-  //    по нажатию на клавишу Esc и по клику на произвольную область экрана за пределами блока с сообщением.
-
-  // //////////////////////////////////////////////
-
   formSubmitBtn.addEventListener('click', function (evt) {
     evt.preventDefault();
     var hashtagsArr = hashtagsInput.value.split(' ');
     var isValid = checkHashtagsValidity(hashtagsArr) && checkCommentValidity(сommentInput);
     if (isValid) {
-      window.backend.upload(new FormData(form), function () { // (response) - нужно определить функцию успешного ответа? Почему параметр подчеркнут Eslit-ом?
+      window.backend.upload(new FormData(form), function () {
         closeEditImage();
+        showSuccessMessage();
       });
     } else {
       hashtagsInput.reportValidity();
