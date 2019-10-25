@@ -6,6 +6,7 @@
   var randomFilter = document.querySelector('#filter-random');
   var discussedFilter = document.querySelector('#filter-discussed');
   var filterButtons = [popularFilter, randomFilter, discussedFilter];
+  var main = document.querySelector('main');
 
   var renderPhoto = function (descAndPhoto) {
     var similarUserPhotos = document.querySelector('#picture')
@@ -67,7 +68,7 @@
     errorMessageElement.querySelector('.error__title').textContent = errorMessage;
     var fragment = document.createDocumentFragment();
     fragment.appendChild(errorMessageElement);
-    window.util.main.appendChild(fragment);
+    main.appendChild(fragment);
   };
 
   var removeOldPictures = window.util.debounce(function () {

@@ -15,6 +15,7 @@
   var pinBlock = formEditImage.querySelector('.effect-level__pin');
   var pinBlockDepth = formEditImage.querySelector('.effect-level__depth');
   var prewiewUzerImage = formEditImage.querySelector('.img-upload__preview');
+  var main = document.querySelector('main');
 
   var photoEffects = [
     {
@@ -264,12 +265,12 @@
 
   var showSuccessMessage = function () {
     var similarSuccessMessage = document.querySelector('#success')
-    .content
-    .querySelector('.success');
+        .content
+        .querySelector('.success');
     var successMessageElement = similarSuccessMessage.cloneNode(true);
     var fragment = document.createDocumentFragment();
     fragment.appendChild(successMessageElement);
-    window.util.main.appendChild(fragment);
+    main.appendChild(fragment);
     var clozeButton = document.querySelector('.success__button');
     clozeButton.addEventListener('click', function () {
       closeSuccessMessage();
