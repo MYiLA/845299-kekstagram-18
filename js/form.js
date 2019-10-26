@@ -145,12 +145,71 @@
     addEffect();
   });
 
-  var onPinMouseup = function () {
-    pinBlock.style.left = pinBlockDepth.style.width = '50%';
-    renderPhotoEffect();
+  //  ///////////////////////////////////////////////////////////////
+
+  var clientX = 100; // начальные координаты пина
+
+  var PinCoords = function (x) {
+    this.x = x;
   };
 
-  pinBlock.addEventListener('mouseup', onPinMouseup);
+  var startCoordinate = new PinCoords(clientX);
+
+  var onPinMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+
+    startCoordinate = new PinCoords(moveEvt.clientX);
+
+    var shift = new PinCoords(startCoordinate.x - moveEvt.clientX);
+    // смещение в пикселях необходимо рассчитать пропорцией в уровень эффекта (заменить существующее смещение в 100% на пиксели)
+    pinBlock.style.left = (pinBlock.offsetLeft - shift.x) + 'px';
+
+  pinBlock.addEventListener('mousedown', function (evt) {
+    evt.preventDefault();
+
+    console.log(startCoordinate);
+
+    pinBlock.addEventListener('mousemove', onPinMouseMove);
+    pinBlock.addEventListener('mouseup', onPinMouseUp);
+
+  });
+
+  var onPinMouseUp = function (upEvt) {
+    upEvt.preventDefault(); // эта функция должна решать задачу ниже
+    // в данное значение (50) нужно записывать существующее положение фильтра относительно контейнера pinBlock.style.lef
+    // pinBlock.style.left = pinBlockDepth.style.width;
+    renderPhotoEffect();
+    document.removeEventListener('mousemove', onPinMouseMove);
+    document.removeEventListener('mouseup', onPinMouseUp);
+  };
+
+  // /////////////////////////////// Задание ////////////////////////////////
+
+  //   В этом задании мы закончим работу над слайдером, задающим глубину эффекта,
+  //   заставив его перемещаться.
+
+  // Теперь, когда вы знакомы с тем, как работает механизм перемещения элементов,
+  // вы можете закончить работу над слайдером.
+
+  // Вам необходимо описать полный цикл перемещение для метки,
+  // то есть добавить обработчики событий mousedown, mousemove и mouseup.
+
+  // Обработчики mousemove и mouseup должны добавляться только при вызове обработчика mousedown.
+
+  // Обработчик mousemove должен запускать логику изменения положения пина: в нём должны
+  // вычисляться новые координаты пина на основании смещения, применяться через стили к
+  // элементу и записываться в поле уровня эффекта (с поправкой на то, что в это
+  // поле записываются координаты середины пина).
+
+  // При перемещении, кроме состояния слайдера, должна меняться глубина эффекта,
+  // наложенного на изображение, то есть меняться значение CSS-фильтра, добавленного
+  // на изображение. Это нетривиальная задача, потому что значение CSS-фильтра записывается
+  // в одних границах, а положение слайдера в других. Вам нужно использовать пропорцию, чтобы рассчитать насыщенность правильно.
+
+  // Ещё один момент касается ограничения перемещения: не забудьте сделать так, чтобы
+  // слайдер можно было двигать только горизонтально и при этом движение должно быть ограничено пределами слайдера.
+
+  // ТЗ //////////////////////////////////////////
 
   var zoomInControl = formEditImage.querySelector('.scale__control--bigger');
   var zoomOutControl = formEditImage.querySelector('.scale__control--smaller');
