@@ -163,7 +163,7 @@
     var shift = new PinCoords(startCoordinate.x - moveEvt.clientX);
     // смещение в пикселях необходимо рассчитать пропорцией в уровень эффекта (заменить существующее смещение в 100% на пиксели)
     pinBlock.style.left = (pinBlock.offsetLeft - shift.x) + 'px';
-
+  };
   pinBlock.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
 
