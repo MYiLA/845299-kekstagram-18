@@ -286,6 +286,7 @@
   };
 
   var showSuccessMessage = function () {
+    closeEditImage();
     var similarSuccessMessage = document.querySelector('#success')
         .content
         .querySelector('.success');
@@ -293,7 +294,7 @@
     var fragment = document.createDocumentFragment();
     fragment.appendChild(successMessageElement);
     main.appendChild(fragment);
-    var clozeButton = document.querySelector('.success__button');
+    var clozeButton = main.querySelector('.success__button');
     clozeButton.addEventListener('click', function () {
       closeSuccessMessage();
     });
@@ -329,15 +330,17 @@
     }
   };
 
+  var showErrorMessage = function (errorMessage) {
+    closeEditImage();
+    window.onError(errorMessage);
+  };
+
   formSubmitBtn.addEventListener('click', function (evt) {
     evt.preventDefault();
     var hashtagsArr = hashtagsInput.value.split(' ');
     var isValid = checkHashtagsValidity(hashtagsArr) && checkCommentValidity(сommentInput);
     if (isValid) {
-      window.backend.upload(new FormData(form), function () {
-        closeEditImage();
-        showSuccessMessage();
-      });
+      window.backend.upload(new FormData(form), showSuccessMessage, showErrorMessage);
     } else {
       hashtagsInput.reportValidity();
       сommentInput.reportValidity();

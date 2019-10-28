@@ -6,7 +6,6 @@
   var randomFilter = document.querySelector('#filter-random');
   var discussedFilter = document.querySelector('#filter-discussed');
   var filterButtons = [popularFilter, randomFilter, discussedFilter];
-  var main = document.querySelector('main');
 
   var renderPhoto = function (descAndPhoto) {
     var similarUserPhotos = document.querySelector('#picture')
@@ -60,17 +59,6 @@
     return arr;
   };
 
-  var onError = function (errorMessage) {
-    var similarErrorMessage = document.querySelector('#error')
-      .content
-      .querySelector('.error');
-    var errorMessageElement = similarErrorMessage.cloneNode(true);
-    errorMessageElement.querySelector('.error__title').textContent = errorMessage;
-    var fragment = document.createDocumentFragment();
-    fragment.appendChild(errorMessageElement);
-    main.appendChild(fragment);
-  };
-
   var removeOldPictures = window.util.debounce(function () {
     var pictures = document.querySelectorAll('.picture');
     if (pictures.length) {
@@ -110,6 +98,13 @@
     setupFilter(photoObjects);
   };
 
-  window.backend.load(onSuccess, onError);
+  window.backend.load(onSuccess, window.onError);
 
 })();
+
+// Если при отправке данных произошла ошибка запроса,
+// покажите соответствующее сообщение. Разметку сообщения,
+// которая находится блоке #error внутри шаблона template,
+// нужно разместить в main. Сообщение должно исчезать после
+// нажатия на кнопки .error__button, по нажатию на клавишу
+// Esc и по клику на произвольную область экрана.
