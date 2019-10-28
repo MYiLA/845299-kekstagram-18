@@ -2,7 +2,7 @@
 (function () {
   var ZOOM_DEFAULT = 100;
   var HUNDRED_PERCENT = 100;
-  var PIN_MAX_POSITION = 450;
+  var PIN_MAX_POSITION = 452;
   var PIN_MIN_POSITION = 0;
   var ZOOM_STEP = 25;
   var ZOOM_MAX = 100;
@@ -163,8 +163,7 @@
       }
     };
 
-    var onPinMouseUp = function (upEvt) {
-      upEvt.preventDefault();
+    var onPinMouseUp = function () {
       renderPhotoEffect();
       document.removeEventListener('mousemove', onPinMouseMove);
       document.removeEventListener('mouseup', onPinMouseUp);
