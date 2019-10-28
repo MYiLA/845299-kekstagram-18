@@ -2,6 +2,8 @@
 (function () {
   var ZOOM_DEFAULT = 100;
   var HUNDRED_PERCENT = 100;
+  var PIN_MAX_POSITION = 450;
+  var PIN_MIN_POSITION = 0;
   var ZOOM_STEP = 25;
   var ZOOM_MAX = 100;
   var ZOOM_MIN = 25;
@@ -15,6 +17,7 @@
   var pinBlock = formEditImage.querySelector('.effect-level__pin');
   var pinBlockDepth = formEditImage.querySelector('.effect-level__depth');
   var prewiewUzerImage = formEditImage.querySelector('.img-upload__preview');
+  var main = document.querySelector('main');
 
   var photoEffects = [
     {
@@ -101,7 +104,7 @@
 
   var changesSaturationFilter = function (maxFilter) {
     var positionPin = parseFloat(pinBlock.style.left);
-    return (positionPin * maxFilter) / HUNDRED_PERCENT;
+    return (positionPin * maxFilter) / PIN_MAX_POSITION;
   };
 
   var effectLevel = formEditImage.querySelector('.effect-level');
@@ -127,7 +130,7 @@
         prewiewUzerImage.classList.remove(photoEffects[b].effectClass);
       }
       if (photoEffects[b].btnRadio.checked) {
-        pinBlock.style.left = pinBlockDepth.style.width = '100%';
+        pinBlock.style.left = pinBlockDepth.style.width = PIN_MAX_POSITION + 'px';
         effectLevel.classList.remove('hidden');
         prewiewUzerImage.classList.add(photoEffects[b].effectClass);
         actualPhotoEffect = {
@@ -144,12 +147,32 @@
     addEffect();
   });
 
-  var onPinMouseup = function () {
-    pinBlock.style.left = pinBlockDepth.style.width = '50%';
-    renderPhotoEffect();
-  };
+  pinBlock.addEventListener('mousedown', function (evt) {
+    evt.preventDefault();
+    var startCoordinate = evt.clientX;
+    var onPinMouseMove = function (moveEvt) {
+      moveEvt.preventDefault();
 
-  pinBlock.addEventListener('mouseup', onPinMouseup);
+      var shift = startCoordinate - moveEvt.clientX;
+      startCoordinate = moveEvt.clientX;
+      if ((pinBlock.offsetLeft - shift) >= PIN_MIN_POSITION && (pinBlock.offsetLeft - shift) <= PIN_MAX_POSITION) {
+        pinBlock.style.left = (pinBlock.offsetLeft - shift) + 'px';
+        pinBlockDepth.style.width = changesSaturationFilter(HUNDRED_PERCENT) + '%';
+      } else {
+        onPinMouseUp();
+      }
+    };
+
+    var onPinMouseUp = function (upEvt) {
+      upEvt.preventDefault();
+      renderPhotoEffect();
+      document.removeEventListener('mousemove', onPinMouseMove);
+      document.removeEventListener('mouseup', onPinMouseUp);
+    };
+
+    document.addEventListener('mousemove', onPinMouseMove);
+    document.addEventListener('mouseup', onPinMouseUp);
+  });
 
   var zoomInControl = formEditImage.querySelector('.scale__control--bigger');
   var zoomOutControl = formEditImage.querySelector('.scale__control--smaller');
@@ -263,14 +286,15 @@
   };
 
   var showSuccessMessage = function () {
+    closeEditImage();
     var similarSuccessMessage = document.querySelector('#success')
-    .content
-    .querySelector('.success');
+        .content
+        .querySelector('.success');
     var successMessageElement = similarSuccessMessage.cloneNode(true);
     var fragment = document.createDocumentFragment();
     fragment.appendChild(successMessageElement);
-    window.util.main.appendChild(fragment);
-    var clozeButton = document.querySelector('.success__button');
+    main.appendChild(fragment);
+    var clozeButton = main.querySelector('.success__button');
     clozeButton.addEventListener('click', function () {
       closeSuccessMessage();
     });
@@ -306,15 +330,17 @@
     }
   };
 
+  var showErrorMessage = function (errorMessage) {
+    closeEditImage();
+    window.onError(errorMessage);
+  };
+
   formSubmitBtn.addEventListener('click', function (evt) {
     evt.preventDefault();
     var hashtagsArr = hashtagsInput.value.split(' ');
     var isValid = checkHashtagsValidity(hashtagsArr) && checkCommentValidity(сommentInput);
     if (isValid) {
-      window.backend.upload(new FormData(form), function () {
-        closeEditImage();
-        showSuccessMessage();
-      });
+      window.backend.upload(new FormData(form), showSuccessMessage, showErrorMessage);
     } else {
       hashtagsInput.reportValidity();
       сommentInput.reportValidity();
