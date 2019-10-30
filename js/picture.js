@@ -59,15 +59,6 @@
     return arr;
   };
 
-  var removeOldPictures = window.util.debounce(function () {
-    var pictures = document.querySelectorAll('.picture');
-    if (pictures.length) {
-      for (var i = 0; i < pictures.length; i++) {
-        pictures[i].remove();
-      }
-    }
-  });
-
   var onFilterClick = function (buttonsArr, index, photoObjects) {
     for (var i = 0; i < buttonsArr.length; i++) {
       if (buttonsArr[i].classList.contains('img-filters__button--active')) {
@@ -75,7 +66,7 @@
       }
     }
     buttonsArr[index].classList.add('img-filters__button--active');
-    removeOldPictures();
+    window.util.removeOldChildrens('.picture');
     renderUserPhotos(updatePhotos(photoObjects));
   };
 

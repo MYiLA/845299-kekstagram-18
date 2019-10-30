@@ -2,6 +2,15 @@
 (function () {
   var DEBOUNCE_INTERVAL = 500;
 
+  var removeOldChildrens = function (childrensClass) {
+    var childrens = document.querySelectorAll(childrensClass);
+    if (childrens.length) {
+      for (var i = 0; i < childrens.length; i++) {
+        childrens[i].remove();
+      }
+    }
+  };
+
   var generateRandomId = function (arr) {
     var index = Math.round(Math.random() * (arr.length - 1));
     return index;
@@ -48,5 +57,6 @@
     keyCodeButton: keyCodeButton,
     randomReshuffleArr: randomReshuffleArr,
     debounce: debounce,
+    removeOldChildrens: removeOldChildrens,
   };
 })();
