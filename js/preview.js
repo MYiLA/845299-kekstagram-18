@@ -26,6 +26,7 @@
         shortCommentsArr = arr;
         window.util.removeOldChildrens('.social__comment');
         blockBigPicture.querySelector('.social__comments').appendChild(renderComments(shortCommentsArr));
+        commentsLoader.removeEventListener('click', onLoaderClick);
       };
 
       commentsLoader.addEventListener('click', onLoaderClick);
