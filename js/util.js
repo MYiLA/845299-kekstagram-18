@@ -3,10 +3,10 @@
   var DEBOUNCE_INTERVAL = 500;
 
   var removeOldChildrens = function (childrensClass) {
-    var childrens = document.querySelectorAll(childrensClass);
-    if (childrens.length) {
-      for (var i = 0; i < childrens.length; i++) {
-        childrens[i].remove();
+    var childrensElement = document.querySelectorAll(childrensClass);
+    if (childrensElement.length) {
+      for (var i = 0; i < childrensElement.length; i++) {
+        childrensElement[i].remove();
       }
     }
   };

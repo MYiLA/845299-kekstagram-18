@@ -1,13 +1,13 @@
 'use strict';
 (function () {
   var MAX_COMMENTS_ARR = 5;
-  var blockBigPicture = document.querySelector('.big-picture');
-  var singleComment = blockBigPicture.querySelector('.social__comment');
-  var commentsLoader = blockBigPicture.querySelector('.comments-loader');
+  var bigPictureElement = document.querySelector('.big-picture');
+  var singleCommentElement = bigPictureElement.querySelector('.social__comment');
+  var commentsLoaderElement = bigPictureElement.querySelector('.comments-loader');
   var renderComments = function (arr) {
     var fragmentComment = document.createDocumentFragment();
     for (var i = 0; i < arr.length; i++) {
-      var newComment = singleComment.cloneNode(true);
+      var newComment = singleCommentElement.cloneNode(true);
       newComment.querySelector('.social__text').textContent = arr[i].message;
       newComment.querySelector('.social__picture').src = arr[i].avatar;
       newComment.querySelector('.social__picture').alt = arr[i].name;
@@ -18,43 +18,43 @@
 
   var showComments = function (arr) {
     if (arr.length > MAX_COMMENTS_ARR) {
-      commentsLoader.classList.remove('hidden');
+      commentsLoaderElement.classList.remove('hidden');
       var shortCommentsArr = (arr.slice()).slice(0, MAX_COMMENTS_ARR);
 
       var onLoaderClick = function () {
-        commentsLoader.classList.add('hidden');
+        commentsLoaderElement.classList.add('hidden');
         shortCommentsArr = arr;
         window.util.removeOldChildrens('.social__comment');
-        blockBigPicture.querySelector('.social__comments').appendChild(renderComments(shortCommentsArr));
-        commentsLoader.removeEventListener('click', onLoaderClick);
+        bigPictureElement.querySelector('.social__comments').appendChild(renderComments(shortCommentsArr));
+        commentsLoaderElement.removeEventListener('click', onLoaderClick);
       };
 
-      commentsLoader.addEventListener('click', onLoaderClick);
+      commentsLoaderElement.addEventListener('click', onLoaderClick);
 
       return shortCommentsArr;
     } else {
-      commentsLoader.classList.add('hidden');
+      commentsLoaderElement.classList.add('hidden');
       return arr;
     }
   };
 
   var renderBigPictures = function (obj) {
-    blockBigPicture.classList.remove('hidden');
-    blockBigPicture.querySelector('.big-picture__img img').src = obj.url;
-    blockBigPicture.querySelector('.likes-count').textContent = obj.likes;
-    blockBigPicture.querySelector('.comments-count').textContent = obj.quantityComments;
-    blockBigPicture.querySelector('.social__caption').textContent = obj.description;
-    blockBigPicture.querySelector('.social__comments').innerHTML = '';
-    blockBigPicture.querySelector('.social__comments').appendChild(renderComments(showComments(obj.comments)));
-    blockBigPicture.querySelector('.social__comment-count').classList.add('hidden');
+    bigPictureElement.classList.remove('hidden');
+    bigPictureElement.querySelector('.big-picture__img img').src = obj.url;
+    bigPictureElement.querySelector('.likes-count').textContent = obj.likes;
+    bigPictureElement.querySelector('.comments-count').textContent = obj.quantityComments;
+    bigPictureElement.querySelector('.social__caption').textContent = obj.description;
+    bigPictureElement.querySelector('.social__comments').innerHTML = '';
+    bigPictureElement.querySelector('.social__comments').appendChild(renderComments(showComments(obj.comments)));
+    bigPictureElement.querySelector('.social__comment-count').classList.add('hidden');
 
-    var buttonCloze = blockBigPicture.querySelector('#picture-cancel');
-    buttonCloze.addEventListener('click', function () {
-      blockBigPicture.classList.add('hidden');
+    var buttonClozeElement = bigPictureElement.querySelector('#picture-cancel');
+    buttonClozeElement.addEventListener('click', function () {
+      bigPictureElement.classList.add('hidden');
     });
 
     var closeBigPicture = function () {
-      blockBigPicture.classList.add('hidden');
+      bigPictureElement.classList.add('hidden');
       document.removeEventListener('keydown', onBigPictureEscPress);
     };
 

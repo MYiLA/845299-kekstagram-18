@@ -1,17 +1,17 @@
 'use strict';
 (function () {
-  var blockPictures = document.querySelector('.pictures');
-  var filterBlock = document.querySelector('.img-filters');
-  var popularFilter = document.querySelector('#filter-popular');
-  var randomFilter = document.querySelector('#filter-random');
-  var discussedFilter = document.querySelector('#filter-discussed');
-  var filterButtons = [popularFilter, randomFilter, discussedFilter];
+  var picturesElement = document.querySelector('.pictures');
+  var filterElement = document.querySelector('.img-filters');
+  var popularFilterElement = document.querySelector('#filter-popular');
+  var randomFilterElement = document.querySelector('#filter-random');
+  var discussedFilterElement = document.querySelector('#filter-discussed');
+  var filterButtons = [popularFilterElement, randomFilterElement, discussedFilterElement];
 
   var renderPhoto = function (descAndPhoto) {
-    var similarUserPhotos = document.querySelector('#picture')
+    var similarPhotosElement = document.querySelector('#picture')
       .content
       .querySelector('.picture');
-    var userPhotosElement = similarUserPhotos.cloneNode(true);
+    var userPhotosElement = similarPhotosElement.cloneNode(true);
 
     userPhotosElement.querySelector('.picture__img').src = descAndPhoto.url;
     userPhotosElement.querySelector('.picture__likes').textContent = descAndPhoto.likes;
@@ -29,7 +29,7 @@
     for (var i = 0; i < dataPhoto.length; i++) {
       fragment.appendChild(renderPhoto(dataPhoto[i]));
     }
-    blockPictures.appendChild(fragment);
+    picturesElement.appendChild(fragment);
   });
 
   var updatePhotos = function (arr) {
@@ -71,7 +71,7 @@
   };
 
   var setupFilter = function (photoObjects) {
-    filterBlock.classList.remove('img-filters--inactive');
+    filterElement.classList.remove('img-filters--inactive');
     filterButtons[1].addEventListener('click', function () {
       onFilterClick(filterButtons, 1, photoObjects);
     });
