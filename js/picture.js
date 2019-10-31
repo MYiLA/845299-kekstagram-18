@@ -1,17 +1,17 @@
 'use strict';
 (function () {
-  var blockPictures = document.querySelector('.pictures');
-  var filterBlock = document.querySelector('.img-filters');
-  var popularFilter = document.querySelector('#filter-popular');
-  var randomFilter = document.querySelector('#filter-random');
-  var discussedFilter = document.querySelector('#filter-discussed');
-  var filterButtons = [popularFilter, randomFilter, discussedFilter];
+  var picturesElement = document.querySelector('.pictures');
+  var filterElement = document.querySelector('.img-filters');
+  var popularFilterElement = document.querySelector('#filter-popular');
+  var randomFilterElement = document.querySelector('#filter-random');
+  var discussedFilterElement = document.querySelector('#filter-discussed');
+  var filterButtons = [popularFilterElement, randomFilterElement, discussedFilterElement];
 
   var renderPhoto = function (descAndPhoto) {
-    var similarUserPhotos = document.querySelector('#picture')
+    var similarPhotosElement = document.querySelector('#picture')
       .content
       .querySelector('.picture');
-    var userPhotosElement = similarUserPhotos.cloneNode(true);
+    var userPhotosElement = similarPhotosElement.cloneNode(true);
 
     userPhotosElement.querySelector('.picture__img').src = descAndPhoto.url;
     userPhotosElement.querySelector('.picture__likes').textContent = descAndPhoto.likes;
@@ -29,7 +29,7 @@
     for (var i = 0; i < dataPhoto.length; i++) {
       fragment.appendChild(renderPhoto(dataPhoto[i]));
     }
-    blockPictures.appendChild(fragment);
+    picturesElement.appendChild(fragment);
   });
 
   var updatePhotos = function (arr) {
@@ -59,15 +59,6 @@
     return arr;
   };
 
-  var removeOldPictures = window.util.debounce(function () {
-    var pictures = document.querySelectorAll('.picture');
-    if (pictures.length) {
-      for (var i = 0; i < pictures.length; i++) {
-        pictures[i].remove();
-      }
-    }
-  });
-
   var onFilterClick = function (buttonsArr, index, photoObjects) {
     for (var i = 0; i < buttonsArr.length; i++) {
       if (buttonsArr[i].classList.contains('img-filters__button--active')) {
@@ -75,12 +66,12 @@
       }
     }
     buttonsArr[index].classList.add('img-filters__button--active');
-    removeOldPictures();
+    window.util.removeOldChildrens('.picture');
     renderUserPhotos(updatePhotos(photoObjects));
   };
 
   var setupFilter = function (photoObjects) {
-    filterBlock.classList.remove('img-filters--inactive');
+    filterElement.classList.remove('img-filters--inactive');
     filterButtons[1].addEventListener('click', function () {
       onFilterClick(filterButtons, 1, photoObjects);
     });
@@ -101,10 +92,3 @@
   window.backend.load(onSuccess, window.onError);
 
 })();
-
-// Если при отправке данных произошла ошибка запроса,
-// покажите соответствующее сообщение. Разметку сообщения,
-// которая находится блоке #error внутри шаблона template,
-// нужно разместить в main. Сообщение должно исчезать после
-// нажатия на кнопки .error__button, по нажатию на клавишу
-// Esc и по клику на произвольную область экрана.

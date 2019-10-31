@@ -1,9 +1,9 @@
 'use strict';
 (function () {
-  var main = document.querySelector('main');
+  var mainElement = document.querySelector('main');
   var closeErrorMessage = function () {
-    var errorMessage = document.querySelector('.error');
-    errorMessage.remove();
+    var errorMessageElement = document.querySelector('.error');
+    errorMessageElement.remove();
     document.removeEventListener('keydown', onErrorMessageEscPress);
     document.removeEventListener('click', onErrorMessageClickClose);
   };
@@ -19,16 +19,16 @@
   };
 
   var onError = function (errorMessage) {
-    var similarErrorMessage = document.querySelector('#error')
+    var similarErrorElement = document.querySelector('#error')
       .content
       .querySelector('.error');
-    var errorMessageElement = similarErrorMessage.cloneNode(true);
+    var errorMessageElement = similarErrorElement.cloneNode(true);
     errorMessageElement.querySelector('.error__title').textContent = errorMessage;
     var fragment = document.createDocumentFragment();
     fragment.appendChild(errorMessageElement);
-    main.appendChild(fragment);
-    var clozeButton = document.querySelector('.error__button');
-    clozeButton.addEventListener('click', function () {
+    mainElement.appendChild(fragment);
+    var clozeButtonElement = document.querySelector('.error__button');
+    clozeButtonElement.addEventListener('click', function () {
       closeErrorMessage();
     });
     document.addEventListener('keydown', onErrorMessageEscPress);
