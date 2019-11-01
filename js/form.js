@@ -17,7 +17,6 @@
   var pinElement = editImageElement.querySelector('.effect-level__pin');
   var pinDepthElement = editImageElement.querySelector('.effect-level__depth');
   var prewiewImageElement = editImageElement.querySelector('.img-upload__preview');
-  var mainElement = document.querySelector('main');
 
   var photoEffects = [
     {
@@ -247,29 +246,20 @@
     }
 
     for (var c = 0; c < hashtags.length; c++) {
+      var res = hashtags[c].match(/#/g);
       if (hashtags[c][0] !== '#') {
         hashtagsElement.setCustomValidity('Хеш-тег начинается с символа # (решётка).');
         return false;
       }
-    }
-
-    for (var d = 0; d < hashtags.length; d++) {
-      if (!hashtags[d][1]) {
+      if (!hashtags[c][1]) {
         hashtagsElement.setCustomValidity('Хеш-тег не может состоять только из одной решётки.');
         return false;
       }
-    }
-
-    for (var g = 0; g < hashtags.length; g++) {
-      var res = hashtags[g].match(/#/g);
       if (res.length > 1) {
         hashtagsElement.setCustomValidity('Хеш-теги разделяются пробелами.');
         return false;
       }
-    }
-
-    for (var e = 0; e < hashtags.length; e++) {
-      if (hashtags[e].length > MAX_HASHTAG_LENGTH) {
+      if (hashtags[c].length > MAX_HASHTAG_LENGTH) {
         hashtagsElement.setCustomValidity('Максимальная длина одного хеш-тега 20 символов, включая решетку.');
         return false;
       }
@@ -286,52 +276,16 @@
 
   var showSuccessMessage = function () {
     closeEditImage();
-    var similarSuccessElement = document.querySelector('#success')
-        .content
-        .querySelector('.success');
-    var successMessageElement = similarSuccessElement.cloneNode(true);
-    var fragment = document.createDocumentFragment();
-    fragment.appendChild(successMessageElement);
-    mainElement.appendChild(fragment);
-    var clozeElement = mainElement.querySelector('.success__button');
-    clozeElement.addEventListener('click', function () {
-      closeSuccessMessage();
-    });
-    document.addEventListener('keydown', onSuccessMessageEscPress);
-    document.addEventListener('click', onSuccessMessageClickClose);
-    document.querySelector('.success__inner').addEventListener('click', function (evt) {
-      evt.stopPropagation();
-    });
-  };
-
-  var onSuccessMessageEscPress = function (evt) {
-    if (evt.keyCode === window.util.keyCodeButton.esc) {
-      closeSuccessMessage();
-    }
-  };
-
-  var onSuccessMessageClickClose = function () {
-    closeSuccessMessage();
-  };
-
-  var closeSuccessMessage = function () {
-    var successMessageElement = document.querySelector('.success');
-    successMessageElement.remove();
-    document.removeEventListener('keydown', onSuccessMessageEscPress);
-    document.removeEventListener('click', onSuccessMessageClickClose);
-  };
-
-  var addRedFrame = function (validityCheck, inputBlock) {
-    if (!validityCheck) {
-      inputBlock.style.boxShadow = '0 0 0 6px rgba(223, 30, 30, 0.9)';
-    } else {
-      inputBlock.style.boxShadow = 'none';
-    }
+    window.message.showSuccess();
   };
 
   var showErrorMessage = function (errorMessage) {
     closeEditImage();
-    window.onError(errorMessage);
+    window.message.showError(errorMessage);
+  };
+
+  var addRedFrame = function (validityCheck, inputBlock) {
+    inputBlock.style.boxShadow = validityCheck ? 'none' : '0 0 0 6px rgba(223, 30, 30, 0.9)';
   };
 
   formSubmitElement.addEventListener('click', function (evt) {

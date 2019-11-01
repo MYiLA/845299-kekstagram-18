@@ -1,6 +1,42 @@
 'use strict';
 (function () {
   var mainElement = document.querySelector('main');
+  var onSuccess = function () {
+    var similarSuccessElement = document.querySelector('#success')
+        .content
+        .querySelector('.success');
+    var successMessageElement = similarSuccessElement.cloneNode(true);
+    var fragment = document.createDocumentFragment();
+    fragment.appendChild(successMessageElement);
+    mainElement.appendChild(fragment);
+    var clozeElement = mainElement.querySelector('.success__button');
+    clozeElement.addEventListener('click', function () {
+      closeSuccessMessage();
+    });
+    document.addEventListener('keydown', onSuccessMessageEscPress);
+    document.addEventListener('click', onSuccessMessageClickClose);
+    document.querySelector('.success__inner').addEventListener('click', function (evt) {
+      evt.stopPropagation();
+    });
+  };
+
+  var onSuccessMessageEscPress = function (evt) {
+    if (evt.keyCode === window.util.keyCodeButton.esc) {
+      closeSuccessMessage();
+    }
+  };
+
+  var onSuccessMessageClickClose = function () {
+    closeSuccessMessage();
+  };
+
+  var closeSuccessMessage = function () {
+    var successMessageElement = document.querySelector('.success');
+    successMessageElement.remove();
+    document.removeEventListener('keydown', onSuccessMessageEscPress);
+    document.removeEventListener('click', onSuccessMessageClickClose);
+  };
+
   var closeErrorMessage = function () {
     var errorMessageElement = document.querySelector('.error');
     errorMessageElement.remove();
@@ -38,6 +74,9 @@
     });
   };
 
-  window.onError = onError;
+  window.message = {
+    showError: onError,
+    showSuccess: onSuccess,
+  };
 
 })();

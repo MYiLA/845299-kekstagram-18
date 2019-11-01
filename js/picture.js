@@ -89,6 +89,6 @@
     setupFilter(photoObjects);
   };
 
-  window.backend.load(onSuccess, window.onError);
+  window.backend.load(onSuccess, window.message.showError);
 
 })();
