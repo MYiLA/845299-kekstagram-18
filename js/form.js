@@ -10,6 +10,7 @@
   var HASHTAGS_LIMIT = 5;
   var MAX_HASHTAG_LENGTH = 20;
   var MAX_COMMENT_LENGTH = 140;
+  var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 
   var editImageElement = document.querySelector('.img-upload__overlay');
   var btnUploadElement = document.querySelector('#upload-file');
@@ -17,7 +18,7 @@
   var pinElement = editImageElement.querySelector('.effect-level__pin');
   var pinDepthElement = editImageElement.querySelector('.effect-level__depth');
   var prewiewImageElement = editImageElement.querySelector('.img-upload__preview');
-
+  var ImageElement = prewiewImageElement.querySelector('img');
   var photoEffects = [
     {
       name: 'grayscale',
@@ -88,6 +89,20 @@
   };
 
   btnUploadElement.addEventListener('change', function () {
+    var file = btnUploadElement.files[0];
+    var fileName = file.name.toLowerCase();
+    var matches = FILE_TYPES.some(function (it) {
+      return fileName.endsWith(it);
+    });
+    if (matches) {
+      var reader = new FileReader();
+
+      reader.addEventListener('load', function () {
+        ImageElement.src = reader.result;
+      });
+
+      reader.readAsDataURL(file);
+    }
     openEditImage();
   });
 
