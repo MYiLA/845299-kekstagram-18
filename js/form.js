@@ -231,11 +231,11 @@
 
   function verifyDuplicates(arr) {
     var result = [];
-    for (var j = 0; j < arr.length; j++) {
-      if (!result.includes(arr[j].toLowerCase())) {
-        result.push(arr[j].toLowerCase());
+    arr.forEach(function (it) {
+      if (!result.includes(it.toLowerCase())) {
+        result.push(it.toLowerCase());
       }
-    }
+    });
 
     return arr.length === result.length;
   }

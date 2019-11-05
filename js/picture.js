@@ -59,11 +59,12 @@
   };
 
   var onFilterClick = function (buttonsArr, index, photoObjects) {
-    for (var i = 0; i < buttonsArr.length; i++) {
-      if (buttonsArr[i].classList.contains('img-filters__button--active')) {
-        buttonsArr[i].classList.remove('img-filters__button--active');
+    buttonsArr.forEach(function (it) {
+      if (it.classList.contains('img-filters__button--active')) {
+        it.classList.remove('img-filters__button--active');
       }
-    }
+    });
+
     buttonsArr[index].classList.add('img-filters__button--active');
     window.util.removeOldChildrens('.picture');
     renderUserPhotos(updatePhotos(photoObjects));
