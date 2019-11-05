@@ -1,5 +1,7 @@
 'use strict';
 (function () {
+  var RANDOM_PHOTOS_NUMBER = 10;
+
   var picturesElement = document.querySelector('.pictures');
   var filterElement = document.querySelector('.img-filters');
   var popularFilterElement = document.querySelector('#filter-popular');
@@ -16,7 +18,6 @@
     userPhotosElement.querySelector('.picture__img').src = descAndPhoto.url;
     userPhotosElement.querySelector('.picture__likes').textContent = descAndPhoto.likes;
     userPhotosElement.querySelector('.picture__comments').textContent = descAndPhoto.comments.length;
-
     userPhotosElement.addEventListener('click', function () {
       window.preview(descAndPhoto);
     });
@@ -38,9 +39,7 @@
     }
 
     if (filterButtons[1].classList.contains('img-filters__button--active')) {
-      var randomPhotosNumber = 10;
-      var randomPhotosArr = window.util.randomReshuffleArr(arr.slice()).slice(0, randomPhotosNumber);
-      return randomPhotosArr;
+      return window.util.randomReshuffleArr(arr.slice()).slice(0, RANDOM_PHOTOS_NUMBER);
     }
 
     if (filterButtons[2].classList.contains('img-filters__button--active')) {
@@ -90,5 +89,4 @@
   };
 
   window.backend.load(onSuccess, window.message.showError);
-
 })();

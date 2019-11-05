@@ -11,7 +11,7 @@
     }
   };
 
-  var keyCodeButton = {
+  var KeyCodeButton = {
     esc: 27,
     enter: 13,
   };
@@ -41,7 +41,7 @@
   };
 
   window.util = {
-    keyCodeButton: keyCodeButton,
+    KeyCodeButton: KeyCodeButton,
     randomReshuffleArr: randomReshuffleArr,
     debounce: debounce,
     removeOldChildrens: removeOldChildrens,

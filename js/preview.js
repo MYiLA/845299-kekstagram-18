@@ -1,9 +1,11 @@
 'use strict';
 (function () {
   var MAX_COMMENTS_ARR = 5;
+
   var bigPictureElement = document.querySelector('.big-picture');
   var singleCommentElement = bigPictureElement.querySelector('.social__comment');
   var commentsLoaderElement = bigPictureElement.querySelector('.comments-loader');
+
   var renderComments = function (arr) {
     var fragmentComment = document.createDocumentFragment();
     for (var i = 0; i < arr.length; i++) {
@@ -59,7 +61,7 @@
     };
 
     var onBigPictureEscPress = function (evt) {
-      if (evt.keyCode === window.util.keyCodeButton.esc) {
+      if (evt.keyCode === window.util.KeyCodeButton.esc) {
         closeBigPicture();
       }
     };
