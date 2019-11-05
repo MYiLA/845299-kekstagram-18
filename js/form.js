@@ -2,7 +2,7 @@
 (function () {
   var ZOOM_DEFAULT = 100;
   var HUNDRED_PERCENT = 100;
-  var PIN_MAX_POSITION = 452;
+  var PIN_MAX_POSITION = 456;
   var PIN_MIN_POSITION = 0;
   var ZOOM_STEP = 25;
   var ZOOM_MAX = 100;
@@ -77,6 +77,7 @@
   var addDefoltEffect = function () {
     effectDefaultElement.checked = true;
     effectLevelElement.classList.add('hidden');
+    pinElement.removeEventListener('focus', onPinFocus);
     prewiewImageElement.style.filter = 'none';
   };
 
@@ -89,6 +90,7 @@
   var openEditImage = function () {
     editImageElement.classList.remove('hidden');
     effectLevelElement.classList.add('hidden');
+    pinElement.removeEventListener('focus', onPinFocus);
     document.addEventListener('keydown', onEditImageEscPress);
     prewiewImageElement.style.transform = 'scale(' + (ZOOM_DEFAULT / HUNDRED_PERCENT) + ')';
     zoomValueElement.value = ZOOM_DEFAULT + '%';
@@ -155,6 +157,7 @@
       if (photoEffects[i].btnRadioElement.checked) {
         pinElement.style.left = pinDepthElement.style.width = PIN_MAX_POSITION + 'px';
         effectLevelElement.classList.remove('hidden');
+        pinElement.addEventListener('focus', onPinFocus);
         prewiewImageElement.classList.add(photoEffects[i].effectClass);
         actualPhotoEffect = {
           name: photoEffects[i].name,
@@ -169,6 +172,32 @@
   allEffectElement.addEventListener('click', function () {
     addEffect();
   });
+
+  var onPinFocus = function () {
+    document.addEventListener('keydown', function () {
+      var SHIFT_STEP = 3;
+      if (event.keyCode === window.util.KeyCodeButton.left) {
+        if ((pinElement.offsetLeft) <= PIN_MIN_POSITION) {
+          event.preventDefault();
+        } else {
+          event.preventDefault();
+          pinElement.style.left = (pinElement.offsetLeft - SHIFT_STEP) + 'px';
+          pinDepthElement.style.width = changesSaturationFilter(HUNDRED_PERCENT) + '%';
+          renderPhotoEffect();
+        }
+      }
+      if (event.keyCode === window.util.KeyCodeButton.right) {
+        if ((pinElement.offsetLeft) >= PIN_MAX_POSITION) {
+          event.preventDefault();
+        } else {
+          event.preventDefault();
+          pinElement.style.left = (pinElement.offsetLeft + SHIFT_STEP) + 'px';
+          pinDepthElement.style.width = changesSaturationFilter(HUNDRED_PERCENT) + '%';
+          renderPhotoEffect();
+        }
+      }
+    });
+  };
 
   pinElement.addEventListener('mousedown', function (evt) {
     evt.preventDefault();

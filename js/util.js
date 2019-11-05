@@ -14,6 +14,8 @@
   var KeyCodeButton = {
     esc: 27,
     enter: 13,
+    left: 37,
+    right: 39,
   };
 
   function randomReshuffleArr(arr) {
