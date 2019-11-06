@@ -4,6 +4,7 @@
   var HUNDRED_PERCENT = 100;
   var PIN_MAX_POSITION = 456;
   var PIN_MIN_POSITION = 0;
+  var PIN_KEY_STEP = 3;
   var ZOOM_STEP = 25;
   var ZOOM_MAX = 100;
   var ZOOM_MIN = 25;
@@ -175,13 +176,12 @@
 
   var onPinFocus = function () {
     document.addEventListener('keydown', function () {
-      var SHIFT_STEP = 3;
       if (event.keyCode === window.util.KeyCodeButton.left) {
         if ((pinElement.offsetLeft) <= PIN_MIN_POSITION) {
           event.preventDefault();
         } else {
           event.preventDefault();
-          pinElement.style.left = (pinElement.offsetLeft - SHIFT_STEP) + 'px';
+          pinElement.style.left = (pinElement.offsetLeft - PIN_KEY_STEP) + 'px';
           pinDepthElement.style.width = changesSaturationFilter(HUNDRED_PERCENT) + '%';
           renderPhotoEffect();
         }
@@ -191,7 +191,7 @@
           event.preventDefault();
         } else {
           event.preventDefault();
-          pinElement.style.left = (pinElement.offsetLeft + SHIFT_STEP) + 'px';
+          pinElement.style.left = (pinElement.offsetLeft + PIN_KEY_STEP) + 'px';
           pinDepthElement.style.width = changesSaturationFilter(HUNDRED_PERCENT) + '%';
           renderPhotoEffect();
         }
