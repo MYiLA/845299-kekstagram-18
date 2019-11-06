@@ -1,5 +1,7 @@
 'use strict';
 (function () {
+  var RANDOM_PHOTOS_NUMBER = 10;
+
   var picturesElement = document.querySelector('.pictures');
   var filterElement = document.querySelector('.img-filters');
   var popularFilterElement = document.querySelector('#filter-popular');
@@ -16,7 +18,6 @@
     userPhotosElement.querySelector('.picture__img').src = descAndPhoto.url;
     userPhotosElement.querySelector('.picture__likes').textContent = descAndPhoto.likes;
     userPhotosElement.querySelector('.picture__comments').textContent = descAndPhoto.comments.length;
-
     userPhotosElement.addEventListener('click', function () {
       window.preview(descAndPhoto);
     });
@@ -38,9 +39,7 @@
     }
 
     if (filterButtons[1].classList.contains('img-filters__button--active')) {
-      var randomPhotosNumber = 10;
-      var randomPhotosArr = window.util.randomReshuffleArr(arr.slice()).slice(0, randomPhotosNumber);
-      return randomPhotosArr;
+      return window.util.randomReshuffleArr(arr.slice()).slice(0, RANDOM_PHOTOS_NUMBER);
     }
 
     if (filterButtons[2].classList.contains('img-filters__button--active')) {
@@ -60,11 +59,12 @@
   };
 
   var onFilterClick = function (buttonsArr, index, photoObjects) {
-    for (var i = 0; i < buttonsArr.length; i++) {
-      if (buttonsArr[i].classList.contains('img-filters__button--active')) {
-        buttonsArr[i].classList.remove('img-filters__button--active');
+    buttonsArr.forEach(function (it) {
+      if (it.classList.contains('img-filters__button--active')) {
+        it.classList.remove('img-filters__button--active');
       }
-    }
+    });
+
     buttonsArr[index].classList.add('img-filters__button--active');
     window.util.removeOldChildrens('.picture');
     renderUserPhotos(updatePhotos(photoObjects));
@@ -89,6 +89,5 @@
     setupFilter(photoObjects);
   };
 
-  window.backend.load(onSuccess, window.onError);
-
+  window.backend.load(onSuccess, window.message.showError);
 })();

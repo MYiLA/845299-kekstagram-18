@@ -11,20 +11,11 @@
     }
   };
 
-  var generateRandomId = function (arr) {
-    var index = Math.round(Math.random() * (arr.length - 1));
-    return index;
-  };
-
-  var getRandomIntInclusive = function (min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  };
-
-  var keyCodeButton = {
+  var KeyCodeButton = {
     esc: 27,
     enter: 13,
+    left: 37,
+    right: 39,
   };
 
   function randomReshuffleArr(arr) {
@@ -52,9 +43,7 @@
   };
 
   window.util = {
-    generateRandomId: generateRandomId,
-    getRandomIntInclusive: getRandomIntInclusive,
-    keyCodeButton: keyCodeButton,
+    KeyCodeButton: KeyCodeButton,
     randomReshuffleArr: randomReshuffleArr,
     debounce: debounce,
     removeOldChildrens: removeOldChildrens,
