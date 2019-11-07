@@ -12,6 +12,7 @@
   var MAX_HASHTAG_LENGTH = 20;
   var MAX_COMMENT_LENGTH = 140;
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
+  var URL_UPLOAD = 'https://js.dump.academy/kekstagram';
 
   var editImageElement = document.querySelector('.img-upload__overlay');
   var btnUploadElement = document.querySelector('#upload-file');
@@ -148,26 +149,26 @@
   };
 
   var addEffect = function () {
-    for (var i = 0; i < photoEffects.length; i++) {
+    photoEffects.forEach(function (it) {
       if (effectDefaultElement.checked) {
         addDefoltEffect();
       }
-      if (!photoEffects[i].btnRadioElement.checked) {
-        prewiewImageElement.classList.remove(photoEffects[i].effectClass);
+      if (!it.btnRadioElement.checked) {
+        prewiewImageElement.classList.remove(it.effectClass);
       }
-      if (photoEffects[i].btnRadioElement.checked) {
+      if (it.btnRadioElement.checked) {
         pinElement.style.left = pinDepthElement.style.width = PIN_MAX_POSITION + 'px';
         effectLevelElement.classList.remove('hidden');
         pinElement.addEventListener('focus', onPinFocus);
-        prewiewImageElement.classList.add(photoEffects[i].effectClass);
+        prewiewImageElement.classList.add(it.effectClass);
         actualPhotoEffect = {
-          name: photoEffects[i].name,
-          unit: photoEffects[i].unit,
-          maxValue: photoEffects[i].maxValue,
+          name: it.name,
+          unit: it.unit,
+          maxValue: it.maxValue,
         };
         renderPhotoEffect();
       }
-    }
+    });
   };
 
   allEffectElement.addEventListener('click', function () {
@@ -289,13 +290,13 @@
       return false;
     }
 
-    for (var a = 0; a < hashtags.length; a++) {
-      var res = hashtags[a].match(/#/g);
-      if (hashtags[a][0] !== '#') {
+    hashtags.forEach(function (it) {
+      var res = it.match(/#/g);
+      if (it[0] !== '#') {
         hashtagsElement.setCustomValidity('Хеш-тег начинается с символа # (решётка).');
         return false;
       }
-      if (!hashtags[a][1]) {
+      if (!it[1]) {
         hashtagsElement.setCustomValidity('Хеш-тег не может состоять только из одной решётки.');
         return false;
       }
@@ -303,11 +304,12 @@
         hashtagsElement.setCustomValidity('Хеш-теги разделяются пробелами.');
         return false;
       }
-      if (hashtags[a].length > MAX_HASHTAG_LENGTH) {
+      if (it.length > MAX_HASHTAG_LENGTH) {
         hashtagsElement.setCustomValidity('Максимальная длина одного хеш-тега 20 символов, включая решетку.');
         return false;
       }
-    }
+      return true;
+    });
 
     if (!verifyDuplicates(hashtags)) {
       hashtagsElement.setCustomValidity('Один и тот же хештег не может быть использован дважды.');
@@ -335,11 +337,16 @@
   formSubmitElement.addEventListener('click', function (evt) {
     evt.preventDefault();
 
-    var hashtagsArr = hashtagsElement.value.split(' ');
+    var deleteEmptyString = function (element) {
+      return element !== '';
+    };
+
+    var hashtagsArr = hashtagsElement.value.split(' ').filter(deleteEmptyString);
+
     var isValid = checkHashtagsValidity(hashtagsArr) && checkCommentValidity(сommentElement);
 
     if (isValid) {
-      window.backend.upload(new FormData(formElement), showSuccessMessage, showErrorMessage);
+      window.backend('POST', URL_UPLOAD, showSuccessMessage, showErrorMessage, new FormData(formElement));
     } else {
       hashtagsElement.reportValidity();
       сommentElement.reportValidity();

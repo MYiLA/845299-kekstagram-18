@@ -1,6 +1,7 @@
 'use strict';
 (function () {
   var RANDOM_PHOTOS_NUMBER = 10;
+  var URL_LOAD = 'https://js.dump.academy/kekstagram/data';
 
   var picturesElement = document.querySelector('.pictures');
   var filterElement = document.querySelector('.img-filters');
@@ -27,9 +28,10 @@
 
   var renderUserPhotos = window.util.debounce(function (dataPhoto) {
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < dataPhoto.length; i++) {
-      fragment.appendChild(renderPhoto(dataPhoto[i]));
-    }
+    dataPhoto.forEach(function (it) {
+      fragment.appendChild(renderPhoto(it));
+    });
+
     picturesElement.appendChild(fragment);
   });
 
@@ -89,5 +91,5 @@
     setupFilter(photoObjects);
   };
 
-  window.backend.load(onSuccess, window.message.showError);
+  window.backend('GET', URL_LOAD, onSuccess, window.message.showError);
 })();
