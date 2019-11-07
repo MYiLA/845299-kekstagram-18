@@ -280,6 +280,22 @@
     }
   };
 
+  var checkGrid = function (elem) {
+    return elem[0] !== '#';
+  };
+
+  var checkSecondElement = function (elem) {
+    return !elem[1];
+  };
+
+  var checkSpaces = function (elem) {
+    return elem.match(/#/g).length > 1;
+  };
+
+  var checkLengthHashtag = function (elem) {
+    return elem.length > MAX_HASHTAG_LENGTH;
+  };
+
   var checkHashtagsValidity = function (hashtags) {
     if (hashtags.length === 1 && hashtags[0] === '') {
       return true;
@@ -290,26 +306,25 @@
       return false;
     }
 
-    hashtags.forEach(function (it) {
-      var res = it.match(/#/g);
-      if (it[0] !== '#') {
-        hashtagsElement.setCustomValidity('Хеш-тег начинается с символа # (решётка).');
-        return false;
-      }
-      if (!it[1]) {
-        hashtagsElement.setCustomValidity('Хеш-тег не может состоять только из одной решётки.');
-        return false;
-      }
-      if (res.length > 1) {
-        hashtagsElement.setCustomValidity('Хеш-теги разделяются пробелами.');
-        return false;
-      }
-      if (it.length > MAX_HASHTAG_LENGTH) {
-        hashtagsElement.setCustomValidity('Максимальная длина одного хеш-тега 20 символов, включая решетку.');
-        return false;
-      }
-      return true;
-    });
+    if (hashtags.some(checkGrid)) {
+      hashtagsElement.setCustomValidity('Хеш-тег начинается с символа # (решётка).');
+      return false;
+    }
+
+    if (hashtags.some(checkSecondElement)) {
+      hashtagsElement.setCustomValidity('Хеш-тег не может состоять только из одной решётки.');
+      return false;
+    }
+
+    if (hashtags.some(checkSpaces)) {
+      hashtagsElement.setCustomValidity('Хеш-теги разделяются пробелами.');
+      return false;
+    }
+
+    if (hashtags.some(checkLengthHashtag)) {
+      hashtagsElement.setCustomValidity('Максимальная длина одного хеш-тега 20 символов, включая решетку.');
+      return false;
+    }
 
     if (!verifyDuplicates(hashtags)) {
       hashtagsElement.setCustomValidity('Один и тот же хештег не может быть использован дважды.');
@@ -347,6 +362,8 @@
 
     if (isValid) {
       window.backend('POST', URL_UPLOAD, showSuccessMessage, showErrorMessage, new FormData(formElement));
+      hashtagsElement.style.boxShadow = 'none';
+      сommentElement.style.boxShadow = 'none';
     } else {
       hashtagsElement.reportValidity();
       сommentElement.reportValidity();
