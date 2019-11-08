@@ -280,22 +280,6 @@
     }
   };
 
-  var checkGrid = function (elem) {
-    return elem[0] !== '#';
-  };
-
-  var checkSecondElement = function (elem) {
-    return !elem[1];
-  };
-
-  var checkSpaces = function (elem) {
-    return elem.match(/#/g).length > 1;
-  };
-
-  var checkLengthHashtag = function (elem) {
-    return elem.length > MAX_HASHTAG_LENGTH;
-  };
-
   var checkHashtagsValidity = function (hashtags) {
     if (hashtags.length === 1 && hashtags[0] === '') {
       return true;
@@ -306,24 +290,26 @@
       return false;
     }
 
-    if (hashtags.some(checkGrid)) {
-      hashtagsElement.setCustomValidity('Хеш-тег начинается с символа # (решётка).');
-      return false;
-    }
+    for (var i = 0; i < hashtags.length; i++) {
+      if (hashtags[i][0] !== '#') {
+        hashtagsElement.setCustomValidity('Хеш-тег начинается с символа # (решётка).');
+        return false;
+      }
 
-    if (hashtags.some(checkSecondElement)) {
-      hashtagsElement.setCustomValidity('Хеш-тег не может состоять только из одной решётки.');
-      return false;
-    }
+      if (!hashtags[i][1]) {
+        hashtagsElement.setCustomValidity('Хеш-тег не может состоять только из одной решётки.');
+        return false;
+      }
 
-    if (hashtags.some(checkSpaces)) {
-      hashtagsElement.setCustomValidity('Хеш-теги разделяются пробелами.');
-      return false;
-    }
+      if (hashtags[i].match(/#/g).length > 1) {
+        hashtagsElement.setCustomValidity('Хеш-теги разделяются пробелами.');
+        return false;
+      }
 
-    if (hashtags.some(checkLengthHashtag)) {
-      hashtagsElement.setCustomValidity('Максимальная длина одного хеш-тега 20 символов, включая решетку.');
-      return false;
+      if (hashtags[i].length > MAX_HASHTAG_LENGTH) {
+        hashtagsElement.setCustomValidity('Максимальная длина одного хеш-тега 20 символов, включая решетку.');
+        return false;
+      }
     }
 
     if (!verifyDuplicates(hashtags)) {
